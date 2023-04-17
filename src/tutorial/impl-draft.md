@@ -1,15 +1,15 @@
-# First implementation of _grrs_
+# Първа имплементация на _grrs_
 
-After the last chapter on command line arguments,
-we have our input data,
-and we can start to write our actual tool.
-Our `main` function only contains this line right now:
+След последната глава за аргументите на командния ред,
+имаме входящите данни,
+и можем да започнем да пишем нашия действителен инструмент.
+Функцията ни `main` съдържа само този ред в момента:
 
 ```rust,ignore
 {{#include impl-draft.rs:15:15}}
 ```
 
-Let’s start by opening the file we got.
+Нека започнем, като отворим файла, който имаме.
 
 ```rust,ignore
 {{#include impl-draft.rs:16:16}}
@@ -17,46 +17,46 @@ Let’s start by opening the file we got.
 
 <aside>
 
-**Note:**
-See that [`.expect`] method here?
-This is a shortcut function to quit that will make the program exit immediately
-when the value (in this case the input file)
-could not be read.
-It's not very pretty,
-and in the next chapter on [Nicer error reporting]
-we will look at how to improve this.
+**Забележка:**
+Виждате метода [`.expect`] нали?
+Това е функция за бърз достъп за излизане, която ще накара програмата да излезе незабавно
+когато стойността (в този случай входният файл)
+не може да се прочете.
+Не е много красиво,
+и в следващата глава за [По-добро отчитане на грешки]
+ще разгледаме как да подобрим това.
 
 [`.expect`]: https://doc.rust-lang.org/1.39.0/std/result/enum.Result.html#method.expect
-[Nicer error reporting]:./errors.html
+[По-добро отчитане на грешки]:./errors.html
 
 </aside>
 
-Now, let’s iterate over the lines
-and print each one that contains our pattern:
+Сега, нека да итерираме редовете
+и отпечатаме всеки, който съдържа нашия шаблон:
 
 ```rust,ignore
 {{#include impl-draft.rs:18:22}}
 ```
 
-## Wrapping up
+## Обобщение
 
-Your code should now look like:
+Вашият код сега трябва да изглежда така:
 
 ```rust,ignore
 {{#include impl-draft.rs}}
 ```
 
-Give it a try: `cargo run -- main src/main.rs` should work now!
+Изпробвайте го: `cargo run -- main src/main.rs` трябва да работи сега!
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-This is not the best implementation:
-It will read the whole file into memory
-– however large the file may be.
-Find a way to optimize it!
-(One idea might be to use a [`BufReader`]
-instead of `read_to_string()`.)
+**Упражнение за читателя:**
+Това не е най-добрата имплементация:
+Той ще прочете целия файл в паметта
+– колкото и голям да е файлът.
+Намерете начин да го оптимизирате!
+(Една идея, можете да използвате [`BufReader`]
+вместо `read_to_string()`.)
 
 [`BufReader`]: https://doc.rust-lang.org/1.39.0/std/io/struct.BufReader.html
 

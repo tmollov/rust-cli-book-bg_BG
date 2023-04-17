@@ -1,59 +1,59 @@
-# Learning Rust by Writing a Command Line App in 15 Minutes
+# Научете Rust като напишете приложение за команден ред в рамките на 15 минути
 
-This tutorial will guide you through writing
-a CLI (command line interface) application
-in [Rust].
-It will take you roughly fifteen minutes
-to get to a point where you have a running program
-(around chapter 1.3).
-After that, we'll continue to tweak our program
-until we reach a point where we can ship our little tool.
+Този урок ще ви води през писането на
+CLI (интерфейс на командния ред) приложение
+с [Rust].
+Ще ви отнеме около петнадесет минути
+за да стигнете до момент, в който имате работеща програма
+(около глава 1.3).
+След това ще продължим да променяме нашата програма
+докато стигнем точка, където можем да публикуваме нашия малък инструмент.
 
 [Rust]: https://rust-lang.org/
 
-You’ll learn all the essentials about how to get going,
-and where to find more information.
-Feel free to skip parts you don't need to know right now
-or jump in at any point.
+Ще научите всички основни неща за това как да започнете,
+и къде да намерите повече информация.
+Чувствайте се свободни да пропуснете части, които не са нужни да знаете в момента
+или да прескочите която и да е точка.
 
 <aside>
 
-**Prerequisites:**
-This tutorial does not replace a general introduction to programming,
-and expects you to be familiar with a few common concepts.
-You should be comfortable with using a command line/terminal.
-If you already know a few other languages,
-this can be a good first contact with Rust.
+**Предпоставки:**
+Този урок не замества общото въведение в програмирането,
+и очаква да сте запознати с няколко общи понятия.
+Трябва да ви е удобно да използвате команден ред/терминал.
+Ако вече знаете няколко други езика,
+това може да бъде добър първи контакт с Rust.
 
-**Getting help:**
-If you at any point feel overwhelmed or confused with the features used,
-have a look at the extensive official documentation that comes with Rust,
-first and foremost the book,
-The Rust Programming Language.
-It comes with most Rust installations
-(`rustup doc`),
-and is available online on [doc.rust-lang.org].
+**Получаване на помощ:**
+Ако в даден момент се почувствате претоварени или объркани от използваните функции,
+разгледайте обширната официална документация, която идва с Rust,
+преди всичко книгата,
+``Езикът за програмиране Rust``.
+То е налице със инсталацията на Rust чрез командада:
+`rustup doc`,
+и е достъпен онлайн на [doc.rust-lang.org].
 
 [doc.rust-lang.org]: https://doc.rust-lang.org
 
-You are also very welcome to ask questions –
-the Rust community is known to be friendly and helpful.
-Have a look at the [community page]
-to see a list of places where people discuss Rust.
+Също така сте добре дошли да задавате въпроси –
+общността на Rust е известна като приятелска и помагаща.
+Разгледайте [страницата на общността],
+за да видите списък с места, където хората обсъждат Rust.
 
-[community page]: https://www.rust-lang.org/community
+[страницата на общността]: https://www.rust-lang.org/community
 
 </aside>
 
-What kind of project do you want to write?
-How about we start with something simple:
-Let’s write a small `grep` clone.
-That is a tool that we can give a string and a path
-and it’ll print only the lines that contain the given string.
-Let’s call it `grrs` (pronounced “grass”).
+Какъв проект искате да напишете?
+Какво ще кажете да започнем с нещо просто:
+Нека да напишем малко копие на програмата `grep`.
+Това е инструмент, на който можем да дадем низ и път към файл
+и ще отпечата само редовете, които съдържат дадения низ.
+Нека да го наречем `grrs` (произнася се "грас").
 
-In the end,
-we want to be able to run our tool like this:
+Последно,
+искаме да можем да управляваме нашия инструмент по този начин:
 
 ```console
 $ cat test.txt
@@ -63,20 +63,20 @@ baz: 30
 $ grrs foo test.txt
 foo: 10
 $ grrs --help
-[some help text explaining the available options]
+[помощен текст, обясняващ наличните опции]
 ```
 
 <aside class="note">
 
-**Note:**
-This book is written for [Rust 2018].
-The code examples can also be used on Rust 2015,
-but you might need to tweak them a bit;
-add `extern crate foo;` invocations, for example.
+**Забележка:**
+Тази книга е написана за [Rust 2018].
+Примерите за код могат да се използват и на Rust 2015,
+но може да се наложи да ги промените малко;
+например, добавяне на `extern crate foo;` призиви.
 
-Make sure you run Rust 1.31.0 (or later)
-and that you have `edition = "2018"` set
-in the `[package]` section of your `Cargo.toml` file.
+Уверете се, че използвате версия на Rust - 1.31.0 (или по-нов)
+и че имате `edition = "2018"` настроен
+в `[package]` секцията на вашия `Cargo.toml` файл.
 
 [Rust 2018]: https://doc.rust-lang.org/edition-guide/index.html
 

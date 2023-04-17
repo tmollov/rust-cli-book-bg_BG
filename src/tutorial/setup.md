@@ -1,27 +1,27 @@
-# Project setup
+# Настройване на проекта
 
-If you haven’t already,
-[install Rust] on your computer
-(it should only take a few minutes).
-After that, open a terminal and navigate to the directory
-you want to put your application code into.
+Ако още не сте го направили,
+[инсталирайте Rust] на вашия компютър
+(трябва да отнеме само няколко минути).
+След това отворете терминалa и отидете до директорията
+в който искате да поставите кода на приложението си.
 
-[install Rust]: https://www.rust-lang.org/tools/install
+[инсталирайте Rust]: https://www.rust-lang.org/tools/install
 
-Start by running
-`cargo new grrs`
-in the directory you store your programming projects in.
-If you look at the newly created `grrs` directory,
-you’ll find a typical setup for a Rust project:
+Започнете като изпълнявате командата
+ `cargo new grrs`
+в директорията, която искате да съхранявате проекта.
+Ако погледнете новосъздадената `grrs` директория,
+ще намерите типична настройка за проект на Rust:
 
-- A `Cargo.toml` file that contains metadata for our project,
-  incl. a list of dependencies/external libraries we use.
-- A `src/main.rs` file that is the entry point for our (main) binary.
+- `Cargo.toml` файл, което съхранява метаданните за нашия проект,
+  вкл. списък със зависимости/външни библиотеки, които използваме.
+- `src/main.rs` файл, което е началната точка на нашата програма/библеотека.
 
-If you can execute `cargo run` in the `grrs` directory
-and get a "Hello World", you’re all set up.
+Ако изпълните командата `cargo run` в директорията `grrs`
+и получавате "Hello World", значи всичко е готово.
 
-## What it might look like
+## Как трябва да изглежда
 
 ```console
 $ cargo new grrs

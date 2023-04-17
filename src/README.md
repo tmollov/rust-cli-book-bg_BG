@@ -1,30 +1,30 @@
-# Command line apps in Rust
+# Приложения за команден ред в Rust
 
-Rust is a statically compiled, fast language with great tooling and a rapidly growing ecosystem.
-That makes it a great fit for writing command line applications:
-They should be small, portable, and quick to run.
-Command line applications are also a great way to get started with learning Rust;
-or to introduce Rust to your team!
+Rust е статично компилиран, бърз език със страхотни инструменти и бързо развиваща се екосистема.
+Това го прави много подходящ за писане на приложения за команден ред:
+Те трябва да са малки, преносими и бързи при изпълнение.
+Приложенията за команден ред също са чудесен начин да започнете да изучавате Rust;
+или да представите Rust на вашия екип!
 
-Writing a program with a simple command line interface (CLI)
-is a great exercise for a beginner
-who is new to the language and wants to get a feel for it.
-There are many aspects to this topic, though,
-that often only reveal themselves later on.
+Писане на програма с прост интерфейс на командния ред (CLI)
+е страхотно упражнение за начинаещи
+който е нов в езика и иска да го усети.
+Има обаче много аспекти на тази тема,
+които често се разкриват едва по-късно.
 
-This book is structured like this:
-We start with a quick tutorial,
-after which you'll end up with a working CLI tool.
-You'll be exposed to a few of the core concepts of Rust
-as well as the main aspects of CLI applications.
-What follows are chapters that go into more detail
-on some of these aspects.
+Тази книга е структурирана така:
+Започваме с бърз урок,
+след което ще получите работещ CLI инструмент.
+Ще се запознаете с някои от основните концепции на Rust
+както и основните аспекти на CLI приложенията.
+Следват глави, които навлизат в повече подробности
+по някои от тези аспекти.
 
-One last thing before we dive right into CLI applications:
-If you find an error in this book
-or want to help us write more content for it,
-you can find its source [in the CLI book repository][book-src].
-We'd love to hear your feedback!
-Thank you!
+Едно последно нещо, преди да се потопим направо в CLI приложенията:
+Ако намерите грешка в тази книга
+или искате да ни помогнете да напишем повече съдържание за него,
+можете да намерите неговия източник [в хранилището на CLI книги][book-src].
+Ще се радваме да чуем вашите отзиви!
+Благодарим Ви!
 
 [book-src]: https://github.com/rust-cli/book

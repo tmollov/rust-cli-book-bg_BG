@@ -1,28 +1,27 @@
-# Nicer error reporting
+# По-добро отчитане на грешки
 
-We all can do nothing but accept the fact that errors will occur.
-And in contrast to many other languages,
-it's very hard not to notice and deal with this reality
-when using Rust:
-As it doesn't have exceptions,
-all possible error states are often encoded in the return types of functions.
+Всички ние не можем да направим нищо, освен да приемем факта, че ще се появят грешки.
+И за разлика от много други езици,
+много е трудно да не забележиш и да не се справиш с тази реалност
+когато използваш Rust:
+Тъй като няма изключения,
+всички възможни състояния на грешките често са кодирани в типа, което функцията връща.
 
-## Results
+## Типът Result
 
-A function like [`read_to_string`] doesn't return a string.
-Instead, it returns a [`Result`]
-that contains either
-a `String`
-or an error of some type
-(in this case [`std::io::Error`]).
+Функция като [`read_to_string`] не връща низ.
+Вместо това то връща [`Result`]
+, което съдържа или `String`
+, или грешка от някакъв вид
+(в този случай [`std::io::Error`]).
 
 [`read_to_string`]: https://doc.rust-lang.org/1.39.0/std/fs/fn.read_to_string.html
 [`Result`]: https://doc.rust-lang.org/1.39.0/std/result/index.html
 [`std::io::Error`]: https://doc.rust-lang.org/1.39.0/std/io/type.Result.html
 
-How do you know which it is?
-Since `Result` is an `enum`,
-you can use `match` to check which variant it is:
+Как разбираме кое е от двете?
+Тъй като `Result` е от тип `enum`,
+може да използваме `match`, за да проверите кой от двете варианта е:
 
 ```rust,no_run
 let result = std::fs::read_to_string("test.txt");
@@ -34,20 +33,20 @@ match result {
 
 <aside>
 
-**Note:**
-Not sure what enums are or how they work in Rust?
-[Check this chapter of the Rust book](https://doc.rust-lang.org/1.39.0/book/ch06-00-enums.html)
-to get up to speed.
+**Забележка:**
+Не сте сигурен какво представляват `enum` и как работят в Rust?
+[Вижте тази глава от книгата за Rust](https://doc.rust-lang.org/1.39.0/book/ch06-00-enums.html)
+, за да сте в крак с този наръчник.
 
 </aside>
 
-## Unwrapping
+## Разопаковане - Unwrapping
 
-Now, we were able to access the content of the file,
-but we can't really do anything with it after the `match` block.
-For this, we'll need to somehow deal with the error case.
-The challenge is that all arms of a `match` block need to return something of the same type.
-But there's a neat trick to get around that:
+Сега успяхме да получим достъп до съдържанието на файла,
+но всъщност не можем да направим нищо с него след `match` блока.
+За това ще трябва по някакъв начин да се справим при случай на грешка.
+Предизвикателството е, че всички потоци на изпълнението на блока `match` трябва да връщат нещо от същия тип.
+Но има хитър трик, за да го заобиколите:
 
 ```rust,no_run
 let result = std::fs::read_to_string("test.txt");
@@ -58,25 +57,25 @@ let content = match result {
 println!("file content: {}", content);
 ```
 
-We can use the String in `content` after the match block.
-If `result` were an error, the String wouldn't exist.
-But since the program would exit before it ever reached a point where we use `content`,
-it's fine.
+Може да използвате `String`-а от `content` след `match` блока.
+Ако `result` дава грешка, `String` няма да съществува.
+Но тъй като програмата щеше да излезе, преди да достигне тази точката, в която използваме `content`,
+това е възможно.
 
-This may seem drastic,
-but it's very convenient.
-If your program needs to read that file and can't do anything if the file doesn't exist,
-exiting is a valid strategy.
-There's even a shortcut method on `Result`s, called `unwrap`:
+Това може да изглежда драстично,
+но е много удобно.
+Ако вашата програма трябва да прочете този файл и не може да направи нищо, ако файлът не съществува,
+излизането е валидна стратегия.
+Има дори включен метод за бърз достъп на `Result`-та, която се нарича `unwrap`:
 
 ```rust,no_run
 let content = std::fs::read_to_string("test.txt").unwrap();
 ```
 
-## No need to panic
+## Няма нужда от `panic`
 
-Of course, aborting the program is not the only way to deal with errors.
-Instead of the `panic!`, we can also easily write `return`:
+Разбира се, прекъсването на програмата не е единственият начин за справяне с грешките.
+Вместо  `panic!`, ние също можем лесно да напишем `return`:
 
 ```rust,no_run
 # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -89,12 +88,12 @@ let content = match result {
 # }
 ```
 
-This, however changes the return type our function needs.
-Indeed, there was something hidden in our examples all this time:
-The function signature this code lives in.
-And in this last example with `return`,
-it becomes important.
-Here's the _full_ example:
+Това обаче променя типа, която се връща, от който се нуждае нашата функция.
+Наистина имаше нещо скрито в нашите примери през цялото това време:
+Сигнатурата на функцията, в която живее този код.
+И в този последен пример с `return`,
+тo става важно.
+Ето и _целият_ пример:
 
 ```rust,no_run
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -108,35 +107,35 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-Our return type is a `Result`!
-This is why we can write `return Err(error);` in the second match arm.
-See how there is an `Ok(())` at the bottom?
-It's the default return value of the function and means
-"Result is okay, and has no content".
+Нашият тип, който връщаме е `Result`!
+Ето защо можем да пишем `return Err(error);` във вторя поток на `match`.
+Вижте как има `Ok(())` най-отдолу?
+Това е върнатата стойност по подразбиране на функцията и означава че
+"Result е правилно, и няма съдържание".
 
 <aside>
 
-**Note:**
-Why is this not written as `return Ok(());`?
-It easily could be – this is totally valid as well.
-The last expression of any block in Rust is its return value,
-and it is customary to omit needless `return`s.
+**Забележка:**
+Защо това не е написано като `return Ok(());`?
+Лесно може да бъде – това също е напълно валидно.
+Последният израз на всеки блок в Rust е стойността, която връща,
+и е обичайно да се пропуска ненужния `return`.
 
 </aside>
 
-## Question Mark
+## Въпросителен знак
 
-Just like calling `.unwrap()` is a shortcut
-for the `match` with `panic!` in the error arm,
-we have another shortcut for the `match` that `return`s in the error arm:
+Също като извикването на функцията `.unwrap()` е пряк път
+за `match` с `panic!` в потока за грешки,
+имаме друг пряк път за `match`, което връща стойността `return` на потока за грешки:
 `?`.
 
-That's right, a question mark.
-You can append this operator to a value of type `Result`,
-and Rust will internally expand this to something very similar to
-the `match` we just wrote.
+Точно така - въпросителния знак.
+Можете да добавите този оператор към стойност на типа `Result`,
+и Rust вътрешно ще разшири това до нещо много подобно на
+`match` блока, което написахме.
 
-Give it a try:
+Опитайте го:
 
 ```rust,no_run
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -146,86 +145,86 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-Very concise!
+Много е сбито!
 
 <aside>
 
-**Note:**
-There are a few more things happening here
-that are not required to understand to work with this.
-For example,
-the error type in our `main` function is `Box<dyn std::error::Error>`.
-But we've seen above that `read_to_string` returns a [`std::io::Error`].
-This works because `?` expands to code that  _converts_ error types.
+**Забележка:**
+Тук се случват още няколко неща
+, което не е нужно да разбирате, за да работите с тях.
+Например,
+типа грешка в нашия `main` функция е `Box<dyn std::error::Error>`.
+Но ние видяхме по-горе това `read_to_string`, че връща [`std::io::Error`].
+Това работи, защото `?` се разширява до код, което  _превръща_ типовете грешки.
 
-`Box<dyn std::error::Error>` is also an interesting type.
-It's a `Box` that can contain _any_ type
-that implements the standard [`Error`][`std::error::Error`] trait.
-This means that basically all errors can be put into this box,
-so we can use `?` on all of the usual functions that return `Result`s.
+`Box<dyn std::error::Error>` също е интересен тип.
+Това е контейнер - `Box`, което може да съдържа _всякакъв_ тип
+който прилага стандартния тип [`Error trait`][`std::error::Error`].
+Това означава, че по принцип всички грешки могат да бъдат поставени в това поле,
+така че можем да използваме `?` на всички обичайни функции, които връщат `Result` типа.
 
 [`std::error::Error`]: https://doc.rust-lang.org/1.39.0/std/error/trait.Error.html
 
 </aside>
 
-## Providing Context
+## Осигуряване на контекст
 
-The errors you get when using `?` in your `main` function are okay,
-but they are not great.
-For example:
-When you run `std::fs::read_to_string("test.txt")?`
-but the file `test.txt` doesn't exist,
-you get this output:
+Грешките, които получавате, когато използвате `?` във вашата `main` функция, са наред,
+но не са страхотни.
+Например:
+Когато изпълним `std::fs::read_to_string("test.txt")?`
+но файла `test.txt` не съществува,
+получавате този резултат:
 
 ```text
 Error: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 ```
 
-In cases where your code doesn't literally contain the file name,
-it would be very hard to tell which file was `NotFound`.
-There are multiple ways to deal with this.
+В случаите, когато вашият код не съдържа буквално името на файла,
+би било много трудно да се каже кой файл не е намерен.
+Има много начини да се справите с това.
 
-For example, we can create our own error type,
-and then use that to build a custom error message:
+Например, можем да създадем наш собствен тип грешка,
+и след това да използваме това, за да създадем персонализирано съобщение за грешка:
 
 ```rust,ignore
 {{#include errors-custom.rs}}
 ```
 
-Now,
-running this we'll get our custom error message:
+Сега,
+изпълнявайки това, ще получим нашето персонализирано съобщение за грешка:
 
 ```text
 Error: CustomError("Error reading `test.txt`: No such file or directory (os error 2)")
 ```
 
-Not very pretty,
-but we can easily adapt the debug output for our type later on.
+Не е много приятно,
+но можем лесно да адаптираме изхода за отстраняване на грешки за нашия тип по-късно.
 
-This pattern is in fact very common.
-It has one problem, though:
-We don't store the original error,
-only its string representation.
-The often used [`anyhow`] library has a neat solution for that:
-similar to our `CustomError` type,
-its [`Context`] trait can be used to add a description.
-Additionally, it also keeps the original error,
-so we get a "chain" of error messages pointing out the root cause.
+Този шаблон всъщност е срещан доста често.
+Обаче има един проблем:
+Ние не съхраняваме оригиналната грешка,
+само неговото низово представяне.
+Често използваната [`anyhow`] библеотека има чудесно решение за този проблем:
+подобно на нашия `CustomError` тип,
+неговия [`Context trait`] може да се използва за добавяне на описание.
+Освен това запазва и оригиналната грешка,
+така че получаваме "верига" от съобщения за грешката, посочващи коренната причина.
 
 [`anyhow`]: https://docs.rs/anyhow
-[`Context`]: https://docs.rs/anyhow/1.0/anyhow/trait.Context.html
+[`Context trait`]: https://docs.rs/anyhow/1.0/anyhow/trait.Context.html
 
-Let's first import the `anyhow` crate by adding
-`anyhow = "1.0"` to the `[dependencies]` section
-of our `Cargo.toml` file.
+Нека да вмъкнем `anyhow` библеотеката като добавим
+`anyhow = "1.0"` в `[dependencies]` секцията
+в файла `Cargo.toml`.
 
-The full example will then look like this:
+Тогава пълният пример би изглеждало така:
 
 ```rust,ignore
 {{#include errors-exit.rs}}
 ```
 
-This will print an error:
+Това ще отпечата грешката:
 
 ```text
 Error: could not read file `test.txt`

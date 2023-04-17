@@ -1,100 +1,98 @@
-# Output
+# Изход
 
-## Printing "Hello World"
+## Принтиране на "Hello World"
 
 ```rust
 println!("Hello World");
 ```
 
-Well, that was easy.
-Great, onto the next topic.
+Е, това беше лесно.
+Страхотно, към следващата тема.
 
-## Using `println!`
+## Използване на `println!`
 
-You can pretty much print all the things you like
-with the `println!` macro.
-This macro has some pretty amazing capabilities,
-but also a special syntax.
-It expects you to write a string literal as the first parameter,
-that contains placeholders that will be filled in
-by the values of the parameters that follow as further arguments.
+Можете почти да отпечатате всички неща, който харесвате
+с т.нар. макро (macro ) функция - `println!`.
+Макросите имат някои доста невероятни възможности,
+но и специален синтаксис.
+Той очаква да напишете низов литерал като първи параметър,
+който съдържа контейнери, които ще бъдат попълнени
+по стойностите на параметрите, които следват като допълнителни аргументи.
 
-For example:
+Например:
 
 ```rust
 let x = 42;
 println!("My lucky number is {}.", x);
 ```
 
-will print
+ще изпринтира
 
 ```console
 My lucky number is 42.
 ```
 
-The curly braces (`{}`) in the string above is one of these placeholders.
-This is the default placeholder type
-that tries to print the given value in a human readable way.
-For numbers and strings this works very well,
-but not all types can do that.
-This is why there is also a "debug representation",
-that you can get by filling the braces of the placeholder like this: `{:?}`.
+Къдравите скоби (`{}`) в горния низ е един от тези контейнери.
+Това е типът заместител по подразбиране
+който се опитва да отпечата дадената стойност по разбираем за човека начин.
+За числа и низове това работи много добре,
+но не всички видове могат да направят това.
+Ето защо има и "репрезентиране при дебъгване",
+който можете да получите, като попълните скобите на контейнера по следния начин: `{:?}`.
 
-For example,
+Например,
 
 ```rust
 let xs = vec![1, 2, 3];
 println!("The list is: {:?}", xs);
 ```
 
-will print
+Ще изпринтира:
 
 ```console
 The list is: [1, 2, 3]
 ```
 
-If you want your own data types to be printable for debugging and logging,
-you can in most cases add a `#[derive(Debug)]` above their definition.
+Ако искате вашите собствени типове данни да могат да се отпечатват за дебъгване и логване,
+в повечето случаи можете да добавите `#[derive(Debug)]` над тяхната дефиниция.
 
 <aside>
 
-**Note:**
-"User-friendly" printing is done using the [`Display`] trait,
-debug output (human-readable but targeted at developers) uses the [`Debug`] trait.
-You can find more information about the syntax you can use in `println!`
-in the [documentation for the `std::fmt` module][std::fmt].
+**Забележка:**
+"Потребителско-приятно" изпринтиране се извършва с помощта на [`Display trait`],
+изпринтирането при дебъгване (четими за хора, но насочени към разработчиците) използва [`Debug trait`].
+Можете да намерите повече информация за синтаксиса, в който можете да използвате в `println!`
+в [документацията за модула `std::fmt`][std::fmt].
 
-[`Display`]: https://doc.rust-lang.org/1.39.0/std/fmt/trait.Display.html
-[`Debug`]: https://doc.rust-lang.org/1.39.0/std/fmt/trait.Debug.html
 [std::fmt]: https://doc.rust-lang.org/1.39.0/std/fmt/index.html
 
 </aside>
 
-## Printing errors
+## Изпринтиране на грешки
 
-Printing errors should be done via `stderr`
-to make it easier for users
-and other tools
-to pipe their outputs to files
-or more tools.
+Изпринтиране на грешки трябва да се правят чрез `stderr`
+за да улеснят потребителите
+и другите инструменти
+за препращане на техните изходи към файлове
+или повече инструменти.
 
 <aside>
 
-**Note:**
-On most operating systems,
-a program can write to two output streams, `stdout` and `stderr`.
-`stdout` is for the program's actual output,
-while `stderr` allows errors and other messages to be kept separate from `stdout`.
-That way,
-output can be stored to a file or piped to another program
-while errors are shown to the user.
+**Забележка:**
+В повечето операционни системи,
+една програма може да пише в два изходни потока, `stdout` и `stderr`.
+`stdout` е за действителния изход на програмата,
+докато `stderr` позволява грешките и другите съобщения да се съхраняват отделно от `stdout`.
+По този начин,
+изходът може да бъде съхранен във файл или прехвърлен към друга програма
+докато грешките се показват на потребителя.
 
 </aside>
 
-In Rust this is achieved
-with `println!` and `eprintln!`,
-the former printing to `stdout`
-and the latter to `stderr`.
+В Rust това се постига
+с `println!` и `eprintln!`,
+като първия използва `stdout` за изход,
+а последния `stderr`.
 
 ```rust
 println!("This is information");
@@ -103,36 +101,36 @@ eprintln!("This is an error! :(");
 
 <aside>
 
-**Beware**: Printing [escape codes] can be dangerous,
-putting the user's terminal into a weird state.
-Always be careful when manually printing them!
+**Внимавайте**: Изпринтирането на т.нар. [escape codes] може да е опасно,
+поставяйки терминала на потребителя в странно състояние.
+Винаги внимавайте, когато ги отпечатвате ръчно!
 
 [escape codes]: https://en.wikipedia.org/wiki/ANSI_escape_code
 
-Ideally you should be using a crate like `ansi_term`
-when dealing with raw escape codes
-to make your (and your user's) life easier.
+В идеалния случай трябва да използвате библеотеки като `ansi_term`
+при работа със необработени `escape codes`
+, за да направите живота ви (и на вашия потребител) по-лесен.
 
 </aside>
 
-## A note on printing performance
+## Бележка относно ефективността на изпринтиране
 
-Printing to the terminal is surprisingly slow!
-If you call things like `println!` in a loop,
-it can easily become a bottleneck in an otherwise fast program.
-To speed this up,
-there are two things you can do.
+Изпринтирането към терминала е изненадващо бавен!
+Ако извикате неща като `println!` в цикъл,
+лесно може да се превърне в пречка в иначе бърза програма.
+За да ускорите това,
+има две неща, които можете да направите.
 
-First,
-you might want to reduce the number of writes
-that actually "flush" to the terminal.
-`println!` tells the system to flush to the terminal _every_ time,
-because it is common to print each new line.
-If you don't need that,
-you can wrap your `stdout` handle in a [`BufWriter`]
-which by default buffers up to 8 kB.
-(You can still call `.flush()` on this `BufWriter`
-when you want to print immediately.)
+Първо,
+може да искате да намалите броя на изпринтиранията
+които всъщност се "заливат" към терминала.
+`println!` казва на системата да "залива" терминала _всеки_ път,
+тъй като е обичайно да се отпечатва всеки на нов ред.
+Ако нямате нужда от това,
+можете да увиете своя `stdout` заявка в [`BufWriter`]
+който по подразбиране буферира до 8 kB.
+(Все още можете да извикате функцията `.flush()` на този `BufWriter`
+когато е нужно да изпринтирате незабавно.)
 
 ```rust
 use std::io::{self, Write};
@@ -142,10 +140,10 @@ let mut handle = io::BufWriter::new(stdout); // optional: wrap that handle in a 
 writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
 ```
 
-Second,
-it helps to acquire a lock on `stdout` (or `stderr`)
-and use `writeln!` to print to it directly.
-This prevents the system from locking and unlocking `stdout` over and over again.
+Второ,
+помага за придобиване на заключване на `stdout` (или `stderr`)
+и използване на функцията `writeln!` за да отпечатате директно.
+Това предотвратява заключването и отключването на `stdout` отново и отново.
 
 ```rust
 use std::io::{self, Write};
@@ -155,80 +153,81 @@ let mut handle = stdout.lock(); // acquire a lock on it
 writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
 ```
 
-You can also combine the two approaches.
+Можете също така да комбинирате двата подхода.
 
 [`BufWriter`]: https://doc.rust-lang.org/1.39.0/std/io/struct.BufWriter.html
 
-## Showing a progress bar
+## Показване на лента за напредък
 
-Some CLI applications run less than a second,
-others take minutes or hours.
-If you are writing one of the latter types of programs,
-you might want to show the user that something is happening.
-For this, you should try to print useful status updates,
-ideally in a form that can be easily consumed.
+Някои CLI приложения работят по-малко от секунда,
+други отнемат минути или часове.
+Ако пишете един от последните типове програми,
+може да искате да покажете на потребителя, че нещо се случва.
+За целта трябва да опитате да отпечатате полезни актуализации на състоянието,
+в идеалния случай във форма, която може лесно да се консумира.
 
-Using the [indicatif] crate,
-you can add progress bars
-and little spinners to your program.
-Here's a quick example:
+Използвайки библеотеката [indicatif],
+можете да добавите ленти за напредък
+и малки спинери към вашата програма.
+Ето един бърз пример:
 
 ```rust,ignore
 {{#include output-progressbar.rs:1:9}}
 ```
 
-See the [documentation][indicatif docs]
-and [examples][indicatif examples]
-for more information.
+Посетете [документацията][indicatif docs]
+и [примерите][indicatif examples]
+за повече информация.
 
 [indicatif]: https://crates.io/crates/indicatif
 [indicatif docs]: https://docs.rs/indicatif
 [indicatif examples]: https://github.com/mitsuhiko/indicatif/tree/master/examples
 
-## Logging
+## Логване
 
-To make it easier to understand what is happening in our program,
-we might want to add some log statements.
-This is usually easy while writing your application.
-But it will become super helpful when running this program again in half a year.
-In some regard,
-logging is the same as using `println!`,
-except that you can specify the importance of a message.
-The levels you can usually use are _error_, _warn_, _info_, _debug_, and _trace_
-(_error_ has the highest priority, _trace_ the lowest).
+За да разберем по-лесно какво се случва в нашата програма,
+може да искаме да добавим някои регистрационни отчети - логове.
+Това обикновено е лесно, докато пишете вашата програма.
+Но ще стане супер полезно, когато стартирате тази програма отново след половин година.
+В известно отношение,
+логването е същото като използването `println!`,
+за разлика от това, че можете да посочите важността на съобщението.
+Нивата, които обикновено можете да използвате са: _error_, _warn_, _info_, _debug_, и _trace_
+(_error_ има най-висок приоритет, _trace_ най-ниската).
 
-To add simple logging to your application,
-you'll need two things:
-The [log] crate (this contains macros named after the log level)
-and an _adapter_ that actually writes the log output somewhere useful.
-Having the ability to use log adapters is very flexible:
-You can, for example, use them to write logs not only to the terminal
-but also to [syslog], or to a central log server.
+За да добавите просто логване към вашето приложение,
+ще ви трябват две неща:
+Библеотеката [log] (това съдържа макроси, именувани на нивата за логване)
+и _адаптер_ което всъщност записва изхода от логовете някъде полезно.
+Възможността да използвате адаптери за логване на файлове е много гъвкава:
+Можете например да ги използвате за записване на лог файлове не само в терминала
+но също и към [syslog] или към централен сървър за логове.
 
 [syslog]: https://en.wikipedia.org/wiki/Syslog
 
-Since we are right now only concerned with writing a CLI application,
-an easy adapter to use is [env_logger].
-It's called "env" logger because you can
-use an environment variable to specify which parts of your application
-you want to log
-(and at which level you want to log them).
-It will prefix your log messages with a timestamp
-and the module where the log messages come from.
-Since libraries can also use `log`,
-you easily configure their log output, too.
+Тъй като в момента се занимаваме само с писането на CLI приложение,
+лесен за използване адаптер е [env_logger].
+Нарича се "env" логер защото можете да използвате
+променлива на средата, за да посочите кои части от вашето приложение
+искате да логвате
+(и на кое ниво искате да ги логвате).
+Той ще префиксира вашите съобщения в логовете с времеви печат
+и модула, откъдето идват съобщенията.
+Тъй като библиотеките също могат да използват `log`,
+вие лесно можете да конфигурирате и изхода им в логовете.
 
 [log]: https://crates.io/crates/log
 [env_logger]: https://crates.io/crates/env_logger
 
-Here's a quick example:
+Ето един бърз пример:
 
 ```rust,ignore
 {{#include output-log.rs}}
 ```
 
-Assuming you have this file as `src/bin/output-log.rs`,
-on Linux and macOS, you can run it like this:
+Ако приемем, че имате този файл като `src/bin/output-log.rs`,
+в Linux и macOS, можете да го стартирате така:
+
 ```console
 $ env RUST_LOG=info cargo run --bin output-log
     Finished dev [unoptimized + debuginfo] target(s) in 0.17s
@@ -237,7 +236,8 @@ $ env RUST_LOG=info cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-In Windows PowerShell, you can run it like this:
+В Windows PowerShell, можете да го стартирате така:
+
 ```console
 $ $env:RUST_LOG="info"
 $ cargo run --bin output-log
@@ -247,7 +247,8 @@ $ cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-In Windows CMD, you can run it like this:
+В Windows CMD, можете да го стартирате така:
+
 ```console
 $ set RUST_LOG=info
 $ cargo run --bin output-log
@@ -257,29 +258,29 @@ $ cargo run --bin output-log
 [2018-11-30T20:25:52Z WARN  output_log] oops, nothing implemented!
 ```
 
-`RUST_LOG` is the name of the environment variable
-you can use to set your log settings.
-`env_logger` also contains a builder
-so you can programmatically adjust these settings,
-and, for example, also show _info_ level messages by default.
+`RUST_LOG` е името на променливата в средата, който
+можете да използвате, за да зададете настройките на вашите логвания.
+`env_logger` съдържа конструктор
+така че програмно да коригирате тези настройки
+и, например, за показване на съобщения от _info_ ниво по подразбиране.
 
-There are a lot of alternative logging adapters out there,
-and also alternatives or extensions to `log`.
-If you know your application will have a lot to log,
-make sure to review them,
-and make your users' life easier.
+Има много алтернативни адаптери за логване,
+както и алтернативи или разширения на `log`.
+Ако знаете, че вашето приложение ще има много за логване,
+не забравяйте да ги прегледате,
+и улеснете живота на вашите потребители.
 
 <aside>
 
-**Tip:**
-Experience has shown that even mildly useful CLI programs can end up being used for years to come.
-(Especially if they were meant as a temporary solution.)
-If your application doesn't work
-and someone (e.g., you, in the future) needs to figure out why,
-being able to pass `--verbose` to get additional log output
-can make the difference between minutes and hours of debugging.
-The [clap-verbosity-flag] crate contains a quick way
-to add a `--verbose` to a project using `clap`.
+**Съвет:**
+Опитът показва, че дори леко полезните CLI програми могат да се окажат използвани години наред.
+(Особено ако са предназначени като временно решение.)
+Ако приложението ви не работи
+и някой (например вие в бъдеще) трябва да разбере защо,
+да сте в състояние да подадете командата `--verbose`, за да получите допълнителен лог изход
+може да направи разликата между минути и часове отстраняване на грешки.
+Библеотеката [clap-verbosity-flag] съдържа бърз начин
+за добавяне на командата `--verbose` на проект ако използва `clap`.
 
 [clap-verbosity-flag]: https://crates.io/crates/clap-verbosity-flag
 
