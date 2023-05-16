@@ -181,7 +181,7 @@ writeln!(handle, "foo: {}", 42); // add `?` if you care about errors here
 
 [indicatif]: https://crates.io/crates/indicatif
 [indicatif docs]: https://docs.rs/indicatif
-[indicatif examples]: https://github.com/mitsuhiko/indicatif/tree/master/examples
+[indicatif examples]: https://github.com/console-rs/indicatif/tree/main/examples
 
 ## Логване
 
