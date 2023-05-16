@@ -1,44 +1,44 @@
-# Packaging and distributing a Rust tool
+# Опаковане и разпространение на Rust инструмент
 
-If you feel confident that your program is ready for other people to use,
-it is time to package and release it!
+Ако се чувствате уверени, че вашата програма е готова за използване от други хора,
+време е да го опаковате и разпространите!
 
-There are a few approaches,
-and we'll look at three of them
-from "quickest to set up" to "most convenient for users".
+Има няколко подхода,
+и ще разгледаме три от тях
+от „най-бърз за настройка“ до „най-удобен за потребителите“.
 
-## Quickest: `cargo publish`
+## Най-бързо: `cargo publish`
 
-The easiest way to publish your app is with cargo.
-Do you remember how we added external dependencies to our project?
-Cargo downloaded them from its default "crate registry", [crates.io].
-With `cargo publish`,
-you too can publish crates to [crates.io].
-And this works for all crates,
-including those with binary targets.
+Най-лесният начин да публикувате приложението си е с cargo.
+Помните ли как добавихме външни зависимости към нашия проект?
+Cargoги ги изтегли от стандартната си "регистър за библиотеки", [crates.io].
+С `cargo publish`,
+вие също можете да публикувате библиотеките си в [crates.io].
+И това работи за всички библиотеки,
+включително тези с изпълняеми цели.
 
-Publishing a crate to [crates.io] is pretty straightforward:
-If you haven't already, create an account on [crates.io].
-Currently, this is done via authorizing you on GitHub,
-so you'll need to have a GitHub account
-(and be logged in there).
-Next, you log in using cargo on your local machine.
-For that, go to your
-[crates.io account page],
-create a new token,
-and then run `cargo login <your-new-token>`.
-You only need to do this once per computer.
-You can learn more about this
-in cargo's [publishing guide].
+Публикуване на библиотеки към [crates.io] е доста просто:
+Ако все още не сте го направили, създайте акаунт в [crates.io].
+В момента това се прави чрез упълномощаване в GitHub,
+така че ще трябва да имате акаунт в GitHub
+(и да сте влезли там).
+След това влизате с cargo на вашата локална машина.
+Отидете на
+[страницата на акаунта ви в crates.io],
+създайте нов токен,
+и след това изпълнете `cargo login <your-new-token>`, като "<your-new-token>", е токен-а от вашия акаунт.
+Трябва да направите това само веднъж на компютъра си.
+Можете да научите повече за това
+в [ръководство за публикуване] на cargo.
 
-Now that cargo as well as crates.io know you,
-you are ready to publish crates.
-Before you hastily go ahead and publish a new crate (version),
-it's a good idea to open your `Cargo.toml` once more
-and make sure you added the necessary metadata.
-You can find all the possible fields you can set
-in the documentation for [cargo's manifest format].
-Here's a quick overview of some common entries:
+Сега, когато cargo, както и crates.io ви познават,
+вие сте готови да публикувате библиотеките си.
+Преди да продължите набързо и да публикувате нова библиотека (версия),
+добра идея е да отворите своя `Cargo.toml` още един път
+и да се уверите, че сте добавили необходимите метаданни.
+Можете да намерите всички възможни полета, които можете да зададете
+в документацията за [формата на манифестациите на cargo].
+Ето кратък преглед на някои често срещани полета:
 
 ```toml
 [package]
@@ -56,284 +56,282 @@ categories = ["command-line-utilities"]
 
 <aside class="note">
 
-**Note:**
-This example includes the mandatory license field
-with a common choice for Rust projects:
-The same license that is also used for the compiler itself.
-It also refers to a `README.md` file.
-It should include a quick description of what your project is about,
-and will be included not only on the crates.io page of your crate,
-but also what GitHub shows by default on repository pages.
+**Забележка:**
+Този пример включва задължителното поле за лиценз
+обикновенно избран за Rust проекти:
+Същият лиценз, който се използва и за самия компилатор.
+Също така има референция към файла `README.md`.
+Този файл трябва да включва кратко описание на това, за което се отнася вашият проект,
+тъй като ще бъде включен не само на страницата в crates.io за вашата библиотека,
+но и в страницата на хранилището, което GitHub по подразбиране показва.
 
 </aside>
 
 [crates.io]: https://crates.io/
-[crates.io account page]: https://crates.io/me
-[publishing guide]: https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html
-[cargo's manifest format]: https://doc.rust-lang.org/1.39.0/cargo/reference/manifest.html
+[страницата на акаунта ви в crates.io]: https://crates.io/me
+[ръководство за публикуване]: https://doc.rust-lang.org/1.39.0/cargo/reference/publishing.html
+[формата на манифестациите на cargo]: https://doc.rust-lang.org/1.39.0/cargo/reference/manifest.html
 
-### How to install a binary from crates.io
+### Как да инсталирате изпълняем файл от crates.io
 
-We've seen how to publish a crate to crates.io,
-and you might be wondering how to install it.
-In contrast to libraries,
-which cargo will download and compile for you
-when you run `cargo build` (or a similar command),
-you'll need to tell it to explicitly install binaries.
+Видяхме как да публикуваме библиотеки в crates.io,
+и може би се чудите как да ги инсталирате.
+За разлика от библиотеките,
+кой cargo ще изтегли и компилира за вас
+когато изпълните командата `cargo build` (или подобен такъв),
+ще трябва да му кажете да инсталира изрично изпълняемите файлове.
 
-This is done using
+Това се прави с помощта на командата
 `cargo install <crate-name>`.
-It will by default download the crate,
-compile all the binary targets it contains
-(in "release" mode, so it might take a while)
-and copy them into the `~/.cargo/bin/` directory.
-(Make sure that your shell knows to look there for binaries!)
+По подразбиране ще изтегли библиотеката,
+компилира всички изпълняеми цели, които съдържа
+(в "release" режим, така че може да отнеме известно време)
+и ще ги копира в директорията `~/.cargo/bin/`.
+(Уверете се, че вашата терминал знае да търси там изпълняемите файлове!)
 
-It's also possible to
-install crates from git repositories,
-only install specific binaries of a crate,
-and specify an alternative directory to install them to.
-Have a look at `cargo install --help` for details.
+Също така е възможно да
+инсталирайте библиотеки от git хранилища,
+инсталирайте само конкретни изпълняеми файлове на библиотеките,
+и посочете алтернативна директория, в която да ги инсталирате.
+Погледнете `cargo install --help` за детайли.
 
-### When to use it
+### Кога да го използвате
 
-`cargo install` is a simple way to install a binary crate.
-It's very convenient for Rust developers to use,
-but has some significant downsides:
-Since it will always compile your source from scratch,
-users of your tool will need to have
-Rust, cargo, and all other system dependencies your project requires
-to be installed on their machine.
-Compiling large Rust codebases can also take some time.
+`cargo install` е лесен начин за инсталиране на изпълняем код.
+Много е удобно за разработчиците на Rust да го използват,
+но има някои съществени недостатъци:
+Тъй като винаги ще компилира вашия източник от нулата,
+потребителите на вашия инструмент ще трябва да имат
+Rust, cargo, и всички други системни зависимости, които вашият проект изисква
+, за да бъдат инсталирани на тяхната машина.
+Компилирането на големи кодови бази на Rust също може да отнеме известно време.
 
-It's best to use this for distributing tools
-that are targeted at other Rust developers.
-For example:
-A lot of cargo subcommands
-like `cargo-tree` or `cargo-outdated`
-can be installed with it.
+Най-добре е да използвате инструменти за разпространение,
+които са насочени към други разработчици на Rust.
+Например:
+Много подкоманди на cargo
+като `cargo-tree` или `cargo-outdated`
+могат да се инсталират с него.
 
-## Distributing binaries
+## Разпространение на изпълняеми файлове
 
-Rust is a language that compiles to native code
-and by default statically links all dependencies.
-When you run `cargo build`
-on your project that contains a binary called `grrs`,
-you'll end up with a binary file called `grrs`.
-Try it out:
-Using `cargo build`, it'll be `target/debug/grrs`,
-and when you run `cargo build --release`, it'll be `target/release/grrs`.
-Unless you use crates
-that explicitly need external libraries to be installed on the target system
-(like using the system's version of OpenSSL),
-this binary will only depend on common system libraries.
-That means,
-you take that one file,
-send it to people running the same operating system as you,
-and they'll be able to run it.
+Rust е език, който се компилира в чист код
+и по подразбиране свързва статично всички зависимости.
+Когато изпълните `cargo build`
+на вашия проект, който съдържа изпълняем файл, наречен `grrs`,
+ще имате друг изпълняем файл, наречен също по същия начин - `grrs`.
+Опитай го:
+Когато изпълнявате `cargo build`, то ви генерира:  `target/debug/grrs`,
+а когато изпълнявате `cargo build --release`, то ви генерира: `target/release/grrs`.
+Освен ако не използвате библиотеки
+които изрично се нуждаят от външни библиотеки, които да бъдат инсталирани на целевата система
+(като използване на системната версия на OpenSSL),
+този изпълняем файл ще зависи само от общи системни библиотеки.
+Това означава,
+че ако вземете този файл,
+и го изпратите на хора, работещи със същата операционна система като вас,
+и те ще могат да го стартират.
 
-This is already very powerful!
-It works around two of the downsides we just saw for `cargo install`:
-There is no need to have Rust installed on the user's machine,
-and instead of it taking a minute to compile,
-they can instantly run the binary.
+Това е много мощно!
+Работи около два от недостатъците, които току-що видяхме `cargo install`:
+Не е необходимо да имате инсталиран Rust на машината на потребителя,
+и вместо да отнеме минута за компилиране,
+те могат незабавно да стартират изпълняемия файл.
 
-So, as we've seen,
-`cargo build` _already_ builds binaries for us.
-The only issue is,
-those are not guaranteed to work on all platforms.
-If you run `cargo build` on your Windows machine,
-you won't get a binary that works on a Mac by default.
-Is there a way to generate these binaries
-for all the interesting platforms
-automatically?
+И така, както видяхме,
+`cargo build` _вече_  е изградил изпълняемия файлове за нас.
+Единственият проблем е,
+не е гарантирано, че работят на всички платформи.
+Ако стартирате `cargo build` на вашата Windows машина,
+няма да получите изпълняем файл, който работи на Mac по подразбиране.
+Има ли начин да се генерират тези изпълняеми файлове
+за всички интересни платформи
+автоматично?
 
-### Building binary releases on CI
+### Изграждане на изпълняеми версии със CI (непрекъсната интеграция)
 
-If your tool is open sourced
-and hosted on GitHub,
-it's quite easy to set up a free CI (continuous integration) service
-like [Travis CI].
-(There are other services that also work on other platforms, but Travis is very popular.)
-This basically runs setup commands
-in a virtual machine
-each time you push changes to your repository.
-What those commands are,
-and the types of machines they run on,
-is configurable.
-For example:
-A good idea is to run `cargo test`
-on a machine with Rust and some common build tools installed.
-If this fails,
-you know there are issues in the most recent changes.
+Ако вашият инструмент е с отворен код
+и се хоства на GitHub,
+доста лесно е да настроите безплатна услуга за CI (непрекъсната интеграция)
+като [Travis CI].
+(Има други услуги, които работят и на други платформи, но Travis е много популярен.)
+Това основно изпълнява команди за настройка
+във виртуална машина
+всеки път, когато направите промени във вашето хранилище.
+Какви са тези команди,
+и типовете машини, на които работят,
+са конфигурируеми.
+Например:
+Добра идея е да изпълните `cargo test`
+на машина с Rust, което има инсталирани някои общи инструменти за изграждане.
+Ако то се провали,
+знаете, че имате проблеми в най-новите промени.
 
 [Travis CI]: https://travis-ci.com/
 
-We can also use this
-to build binaries and upload them to GitHub!
-Indeed, if we run
+Можем да използваме и това
+за изграждане на изпълняеми файлове и качването им в GitHub!
+Всъщност, ако изпълните
 `cargo build --release`
-and upload the binary somewhere,
-we should be all set, right?
-Not quite.
-We still need to make sure the binaries we build
-are compatible with as many systems as possible.
-For example,
-on Linux we can compile not for the current system,
-but instead for the `x86_64-unknown-linux-musl` target,
-to not depend on default system libraries.
-On macOS, we can set `MACOSX_DEPLOYMENT_TARGET` to `10.7`
-to only depend on system features present in versions 10.7 and older.
+и качете изпълняемия файл някъде,
+всичко трябва да е готови, нали?
+Не точно.
+Все още трябва да се уверим, че изпълняемите файлове, които изграждаме
+са съвместими с възможно най-много системи.
+Например,
+в Linux среда можем да компилираме не за текущата система,
+но и за `x86_64-unknown-linux-musl`,
+за да не зависи от системните библиотеки по подразбиране.
+В macOS, можем да зададем стойноста на `MACOSX_DEPLOYMENT_TARGET` да е `10.7`,
+за да зависи само от системните функции, присъстващи във версии 10.7 и по-стари.
 
-You can see one example of building binaries using this approach
-[here][wasm-pack-travis] for Linux and macOS
-and [here][wasm-pack-appveyor] for Windows (using AppVeyor).
+Можете да видите един пример за изграждане на изпълняеми файлове с помощта на този подход
+[тука][wasm-pack-travis] за Linux и macOS
+, и [тука][wasm-pack-appveyor] за Windows (използвайки AppVeyor).
 
 [wasm-pack-travis]: https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.travis.yml#L74-L91
 [wasm-pack-appveyor]: https://github.com/rustwasm/wasm-pack/blob/51e6351c28fbd40745719e6d4a7bf26dadd30c85/.appveyor.yml
 
-Another way is to use pre-built (Docker) images
-that contain all the tools we need
-to build binaries.
-This allows us to easily target more exotic platforms, too.
-The [trust] project contains
-scripts that you can include in your project
-as well as instructions on how to set this up.
-It also includes support for Windows using AppVeyor.
+Друг начин е да използвате предварително изградени (Docker) изображения,
+които съдържат всички инструменти, от които се нуждаем,
+за да изграждаме изпълняеми файлове.
+Това ни позволява лесно да се насочваме и към по-екзотични платформи.
+Проекта [trust] съдържа
+скриптове, които можете да включите във вашия проект
+както и инструкции как да ги настроите.
+Той също така включва поддръжка за Windows използвайки AppVeyor.
 
-If you'd rather set this up locally
-and generate the release files on your own machine,
-still have a look at trust.
-It uses [cross] internally,
-which works similar to cargo
-but forwards commands to a cargo process inside a Docker container.
-The definitions of the images are also available in
-[cross' repository][cross].
+Ако предпочитате да настроите това локално
+и da генерирате изходните файловете на вашата собствена машина,
+ще е хувабо все пак да погледнете в проекта `trust`.
+То вътрешно използва инструмента [cross],
+, което работи подобно на cargo
+но препраща команди към cargo процеса вътре в Docker контейнера.
+Дефинициите на изображенията също са налични в
+[хранилището на cross][cross].
 
 [trust]: https://github.com/japaric/trust
 [cross]: https://github.com/rust-embedded/cross
 
-### How to install these binaries
+### Как да инсталирате тези изпълняеми файлове
 
-You point your users to your release page
-that might look something [like this one][wasm-pack-release],
-and they can download the artifacts we've just created.
-The release artifacts we've just generated are nothing special:
-At the end, they are just archive files that contain our binaries!
-This means that users of your tool
-can download them with their browser,
-extract them (often happens automatically),
-and copy the binaries to a place they like.
+Ако насочваме потребителите си към страницата си на изданието
+то може да изглежда [подобно на това][wasm-pack-release],
+и те могат да изтеглят артефактите, което токущо сме създали.
+Артефактите на изданието, които току-що генерирахме, не са нищо особено:
+В крайна сметка те са просто архивни файлове, които съдържат нашите изпълняеми файлове!
+Това означава, че потребителите на вашия инструмент
+могат да ги изтеглят с браузъра си,
+да ги разархивират (случва се предимно автоматично),
+и да копират тези изпълняеми файлове на място, което им харесва.
 
 [wasm-pack-release]: https://github.com/rustwasm/wasm-pack/releases/tag/v0.5.1
 
-This does require some experience with manually "installing" programs,
-so you want to add a section to your README file
-on how to install this program.
+Това изисква известен опит с ръчно "инсталиране" на програми,
+така че е хубаво да добавите раздел към вашия README файл,
+затова как се инсталира вашата програма.
 
 <aside class="note">
 
-**Note:**
-If you used [trust] to build your binaries and added them to GitHub releases,
-you can also tell people to run
+**Забележка:**
+Ако използвате [trust] за да изградите вашите изпълняеми файлове и да ги добавите към изданията на Github,
+можете също да кажете на хората да изпълняват командата
 `curl -LSfs https://japaric.github.io/trust/install.sh | sh -s -- --git your-name/repo-name`
-if you think that makes it easier.
+ако смятате, че това го прави по-лесно.
 
 </aside>
 
-### When to use it
+### Кога да го използвате
 
-Having binary releases is a good idea in general,
-there's hardly any downside to it.
-It does not solve the problem of users having to manually
-install and update
-your tools,
-but they can quickly get the latest releases version
-without the need to install Rust.
+Като цяло наличието на изпълняема версии е добра идея,
+едва ли има някакъв недостатък в това.
+Това не решава проблема с това, че потребителите трябва да правят ръчно
+инсталиране и актуализиране
+на вашите инструменти,
+но те могат бързо да получат най-новата версия
+без да е необходимо да инсталират Rust.
 
-### What to package in addition to your binaries
+### Какво да пакетирате в допълнение към вашите изпълняеми файлове
 
-Right now,
-when a user downloads our release builds,
-they will get a `.tar.gz` file
-that only contains binary files.
-So, in our example project,
-they will just get a single `grrs` file they can run.
-But there are some more files we already have in our repository
-that they might want to have.
-The README file that tells them how to use this tool,
-and the license file(s),
-for example.
-Since we already have them,
-they are easy to add.
+В момента,
+когато потребител изтегли нашите компилации от тип `release`,
+те ще получат `.tar.gz` файл,
+което съдържа само изпълняемите файлове.
+Така че, в нашия примерен проект,
+те ще получат само един `grrs` файл, което могат да го изпълнят.
+Но има още няколко файла, дето вече имаме в нашето хранилище,
+които някои биха искали да имат.
+Този `README` файл, което показва как се използва този инструмент,
+и файловете за лиценс,
+например.
+Тъй като вече ги имаме,
+те са лесни за добавяне.
 
-There are some more interesting files
-that make sense especially for command-line tools,
-though:
-How about we also ship a man page in addition to that README file,
-and config files that add completions of the possible flags to your shell?
-You can write these by hand,
-but _clap_, the argument parsing library we use
-(which clap builds upon)
-has a way to generate all these files for us.
-See [this in-depth chapter][clap-man-pages]
-for more details.
-
+Има още интересни файлове
+които имат смисъл особено за инструменти за командния ред,
+все пак:
+Какво ще кажете да изпратим и страница с ръководство в допълнение към този README файл,
+и конфигурационни файлове, които добавят завършвания на възможните флагове към вашия терминал?
+Можете да ги напишете на ръка,
+но _clap_, библиотеката за разбор на аргументи, която използваме
+(на който _clap_ надграждa)
+има начин да генерира всички тези файлове за нас.
+Погледнете [това в задълбочените теми][clap-man-pages]
+за повече детайли.
 
 [clap-man-pages]: ../in-depth/docs.html
 
+## Вкарване на вашето приложение в хранилища на пакети
 
-## Getting your app into package repositories
+И двата подхода, които сме виждали досега
+не са начинът, по който обикновено инсталирате софтуер на вашата машина.
+Особено инструментите за командния ред
+ги инсталирате с помощта на глобални мениджъри на пакети
+на повечето операционни системи.
+Предимствата за потребителите са доста очевидни:
+Няма нужда да мислите как да инсталирате вашата програма,
+ако може да се инсталира по същия начин, както инсталирате другите инструменти.
+Тези мениджъри на пакети също позволяват на потребителите да актуализират своите програми
+когато е налична нова версия.
 
-Both approaches we've seen so far
-are not how you typically install software on your machine.
-Especially command-line tools
-you install using global package managers
-on most operating systems.
-The advantages for users are quite obvious:
-There is no need to think about how to install your program,
-if it can be installed the same way as they install the other tools.
-These package managers also allow users to update their programs
-when a new version is available.
-
-Sadly, supporting different systems means
-you'll have to look at how these different systems work.
-For some,
-it might be as easy as adding a file to your repository
-(e.g. adding a Formula file like [this][rg-formula] for macOS's `brew`),
-but for others you'll often need to send in patches yourself
-and add your tool to their repositories.
-There are helpful tools like
+За съжаление, поддържането на различни системи означава
+ще трябва да разгледате как работят тези различни системи.
+Например,
+може да е толкова лесно, колкото добавянето на файл към вашето хранилище
+(напр. добавяне на файл с формула като [това][rg-formula] в macOS `brew`),
+но за други често ще трябва сами да изпращате пачове
+и да добавяте вашия инструмент към техните хранилища.
+Има полезни инструменти като
 [cargo-bundle](https://crates.io/crates/cargo-bundle),
-[cargo-deb](https://crates.io/crates/cargo-deb), and
+[cargo-deb](https://crates.io/crates/cargo-deb), и
 [cargo-aur](https://crates.io/crates/cargo-aur),
-but describing how they work
-and how to correctly package your tool
-for those different systems is beyond the scope of this chapter.
+но описвайки как работят
+и как опаковат правилно вашия инструмент
+за тези различни системи е извън обхвата на тази глава.
 
 [rg-formula]: https://github.com/BurntSushi/ripgrep/blob/31adff6f3c4bfefc9e77df40871f2989443e6827/pkg/brew/ripgrep-bin.rb
 
-Instead,
-let's have a look at a tool that is written in Rust
-and that is available in many different package managers.
+Вместо това,
+нека да разгледаме инструмент, който е написан на Rust,
+което е налично в много различни мениджъри на пакети.
 
-### An example: ripgrep
+### Например: ripgrep
 
-[ripgrep] is an alternative to `grep`/`ack`/`ag` and is written in Rust.
-It's quite successful and is packaged for many operating systems:
-Just look at [the "Installation" section][rg-install] of its README!
+[ripgrep] е алтернатива на `grep`/`ack`/`ag` и е написан с Rust.
+Той е доста успешен и е пакетиран за много операционни системи:
+Просто погледнете [секцията "Installation"][rg-install] на README файла му!
 
-Note that it lists a few different options how you can install it:
-It starts with a link to the GitHub releases
-which contain the binaries so you can download them directly;
-then it lists how to install it using a bunch of different package managers;
-finally, you can also install it using `cargo install`.
+Имайте предвид, че той изброява няколко различни опции как можете да го инсталирате:
+Започва с връзка към изданията на GitHub
+който съдържа изпълняеми файлове, така че можете да ги изтеглите директно;
+след това изброява как да го инсталирате с помощта на куп различни мениджъри на пакети;
+и накрая, можете също да го инсталирате с помощта на `cargo install`.
 
-This seems like a very good idea:
-Don't pick and choose one of the approaches presented here,
-but start with `cargo install`,
-add binary releases,
-and finally start distributing your tool using system package managers.
+Това изглежда като много добра идея:
+Не избирайте един от подходите, представени тук,
+но започнете с `cargo install`,
+добавете изпълняемите издания,
+и накрая започнете да разпространявате инструмента си с помощта на системни мениджъри на пакети.
 
 [ripgrep]: https://github.com/BurntSushi/ripgrep
 [rg-install]: https://github.com/BurntSushi/ripgrep/tree/31adff6f3c4bfefc9e77df40871f2989443e6827#installation

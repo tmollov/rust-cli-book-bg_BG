@@ -1,49 +1,48 @@
-# Testing
+# Тестване
 
-Over decades of software development,
-people have discovered one truth:
-Untested software rarely works.
-(Many people would go as far as saying:
-"Most tested software doesn't work either."
-But we are all optimists here, right?)
-So, to ensure that your program does what you expect it to do,
-it is wise to test it.
+В продължение на десетилетия разработка на софтуер,
+хората са открили една истина:
+Нетестваният софтуер рядко работи.
+(Много хора биха стигнали дотам, че да кажат:
+„Повечето тестван софтуер също не работи.“
+Но тук всички сме оптимисти, нали?)
+Така че, за да сте сигурни, че вашата програма прави това, което очаквате да прави,
+разумно е да го тествате.
 
-One easy way to do that is
-to write a `README` file
-that describes what your program should do.
-And when you feel ready to make a new release,
-go through the `README` and ensure that
-the behavior is still as expected.
-You can make this a more rigorous exercise
-by also writing down how your program should react to erroneous inputs.
+Един лесен начин да направите това е
+да напишете `README` файл
+който описва какво трябва да прави вашата програма.
+И когато се почувствате готови да направите ново издание,
+преминете през `README` файла и гарантирайте това
+поведението все още е според очакванията.
+Можете да направите това по-строго упражнение
+като също така запишете как вашата програма трябва да реагира на грешни входове.
 
-Here's another fancy idea:
-Write that `README` before you write the code.
+Ето още една интересна идея:
+Напишете `README` файла преди да напишете кода.
 
 <aside>
 
-**Note:**
-Have a look at
-[test-driven development] (TDD)
-if you haven't heard of it.
+**Забележка:**
+Погледнете на
+[Test-Driver Development] (TDD)
+ако не сте чували за него.
 
-[test-driven development]: https://en.wikipedia.org/wiki/Test-driven_development
-
+[Test-Driver Development]: https://dev.bg/digest/test-driven-development/
 
 </aside>
 
-## Automated testing
+## Автоматизирано тестване
 
-Now, this is all fine and dandy,
-but doing all of this manually?
-That can take a lot of time.
-At the same time,
-many people have come to enjoy telling computers to do things for them.
-Let's talk about how to automate these tests.
+Сега, всичко това е чудесно,
+но да направите всичко това ръчно?
+Това може да отнеме много време.
+По същото време,
+много хора започнаха да изпитват удоволствие да казват на компютрите да правят неща вместо тях.
+Нека поговорим как да автоматизираме тези тестове.
 
-Rust has a built-in test framework,
-so let's start by writing a first test:
+Rust има вградена тестов `framework`
+така че нека започнем с написването на първия ни тест:
 
 ```rust,ignore
 # fn answer() -> i32 {
@@ -56,20 +55,20 @@ fn check_answer_validity() {
 }
 ```
 
-You can put this snippet of code in pretty much any file
-and `cargo test` will find
-and run it.
-The key here is the `#[test]` attribute.
-It allows the build system to discover such functions
-and run them as tests,
-verifying that they don't panic.
+Можете да поставите този кодов фрагмент в почти всеки файл
+и `cargo test` ще намери
+и ще го изпълни.
+Ключът тук е `#[test]` атрибутът.
+Това позволява на системата за изграждане да открие такива функции
+и да ги изпълни като тестове,
+проверявайки дали са коректни.
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-Make this test work.
+**Упражнение за читателя:**
+Накарайте този тест да проработи.
 
-You should end up with output like the following:
+Трябва да получите резултат като следния:
 
 ```text
 running 1 test
@@ -80,35 +79,35 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 </aside>
 
-Now that we've seen *how* we can write tests,
-we still need to figure out *what* to test.
-As you've seen it's fairly easy to write assertions
-for functions.
-But a CLI application is often more than one function!
-Worse, it often deals with user input,
-reads files,
-and writes output.
+Сега, след като видяхме *как* можем да пишем тестове,
+все още трябва да разберем *какво* да тестваме.
+Както видяхте, е доста лесно да се пишат твърдения
+за функции.
+Но едно CLI приложение често има повече от една функция!
+По-лошото е, че то често се занимава с входните данни от потребителя,
+четене от файлове
+и изваждане на резултат.
 
-## Making your code testable
+## Направете кода си годен за тестване
 
-There are two complementary approaches to testing functionality:
-Testing the small units that you build your complete application from,
-these are called "unit tests".
-There is also testing the final application "from the outside"
-called "black box tests" or "integration tests".
-Let's begin with the first one.
+Има два допълващи се подхода за тестване на функционалността:
+Тестване малки единици, от които изграждате цялото си приложение,
+които се наричат "unit tests".
+И също така и тестване на готовото приложение "от външната страна"
+наречено още "black box tests" или "integration tests" (интеграционни тестове).
+Нека да започнем с първия.
 
-To figure out what we should test,
-let's see what our program features are.
-Mainly, `grrs` is supposed to print out the lines that match a given pattern.
-So, let's write unit tests for _exactly this_:
-We want to ensure that our most important piece of logic works,
-and we want to do it in a way that is not dependent
-on any of the setup code we have around it
-(that deals with CLI arguments, for example).
+За да разберем какво трябва да тестваме,
+нека да видим какви са функциите на нашата програма.
+Главно, `grrs` трябва да отпечата редовете, които отговарят на даден шаблон.
+И така, нека да напишем `unit` тестове *точно за това*:
+Искаме да сме сигурни, че нашата най-важна част от логиката работи
+и искаме да го направим по начин, който е независим
+от всеки код за настройка, който имаме около него
+(който се занимава с CLI аргументи, например).
 
-Going back to our [first implementation](impl-draft.md) of `grrs`,
-we added this block of code to the `main` function:
+Връщайки се към нашата [първа имплементация](impl-draft.md) на `grrs`,
+добавихме този блок код към функцията `main`:
 
 ```rust,ignore
 // ...
@@ -119,9 +118,9 @@ for line in content.lines() {
 }
 ```
 
-Sadly, this is not very easy to test.
-First of all, it's in the main function, so we can't easily call it.
-This is easily fixed by moving this piece of code into a function:
+За съжаление, това не е много лесно за тестване.
+Първо, това е в основната функция, така че не можем лесно да го извикаме.
+Това лесно се коригира чрез преместване на тази част от кода във функция:
 
 ```rust,no_run
 fn find_matches(content: &str, pattern: &str) {
@@ -133,8 +132,8 @@ fn find_matches(content: &str, pattern: &str) {
 }
 ```
 
-Now we can call this function in our test,
-and see what its output is:
+Сега можем да извикаме тази функция в нашия тест,
+и да видим какъв е изходът му:
 
 ```rust,ignore
 #[test]
@@ -143,103 +142,103 @@ fn find_a_match() {
     assert_eq!( // uhhhh
 ```
 
-Or… can we?
-Right now, `find_matches` prints directly to `stdout`, i.e., the terminal.
-We can't easily capture this in a test!
-This is a problem that often comes up
-when writing tests after the implementation:
-We have written a function that is firmly integrated
-in the context it is used in.
+Или… можем ли?
+В момента, `find_matches` отпечатва директно към `stdout`, т.е. в терминала.
+Не можем лесно да уловим това в тест!
+Това е проблем, който често се появява
+когато пишете тестове след имплементацията на логиката:
+Написахме функция, която е здраво интегрирана
+в контекста, в който се използва.
 
 <aside class="note">
 
-**Note:**
-This is totally fine when writing small CLI applications.
-There's no need to make everything testable!
-It is important to think about
-which parts of your code you might want to write unit tests for, however.
-While we'll see that it's easy to change this function to be testable,
-this is not always the case.
+**Забележка:**
+Това е напълно правилно, когато пишете малки CLI приложения.
+Няма нужда всичко да е тестваем!
+Важно е да се мисли за
+кои части от кода си обаче бихте искали да напишете `unit` тестове.
+Въпреки че ще видим, че е лесно да промените тази функция, за да бъде тествана,
+това не винаги ще е случая.
 
 </aside>
 
-Alright, how can we make this testable?
-We'll need to capture the output somehow.
-Rust's standard library has some neat abstractions
-for dealing with I/O (input/output)
-and we'll make use of one called [`std::io::Write`].
-This is a [trait][trpl-traits] that abstracts over things we can write to,
-which includes strings but also `stdout`.
+Добре, как можем да направим това тестваем?
+Ще трябва някак да уловим резултата.
+Стандартната библеотека на Rust има някои чисти абстракции
+за работа с I/O (вход/изход)
+и ние ще използваме един наречен [`std::io::Write`].
+Това е [trait][trpl-traits] абстрахираща над нещата, за които можем да пишем,
+което включва низове, но също така `stdout`.
 
 [trpl-traits]: https://doc.rust-lang.org/book/ch10-02-traits.html
 [`std::io::Write`]: https://doc.rust-lang.org/1.39.0/std/io/trait.Write.html
 
-If this is the first time you've heard "trait"
-in the context of Rust,
-you are in for a treat.
-Traits are one of the most powerful features of Rust.
-You can think of them like interfaces in Java,
-or type classes in Haskell
-(whatever you are more familiar with).
-They allow you to abstract over behavior
-that can be shared by different types.
-Code that uses traits can
-express ideas in very generic and flexible ways.
-This means it can also get difficult to read, though.
-Don't let that intimidate you:
-Even people who have used Rust for years
-don't always get what generic code does immediately.
-In that case,
-it helps to think of concrete uses.
-For example,
-in our case,
-the behavior that we abstract over is "write to it".
-Examples for the types that implement ("impl") it
-include:
-The terminal's standard output,
-files,
-a buffer in memory,
-or TCP network connections.
-(Scroll down in the [documentation for `std::io::Write`][`std::io::Write`]
-to see a list of "Implementors".)
+Ако за първи път чувате думичката "trait"
+в контекста на Rust,
+трябва се обогатите.
+`Trait`-овете са са една от най-мощните характеристики на Rust.
+Можете да мислите за тях като за интерфейсите в Java,
+или типа 'classes' в езика Haskell
+(с каквото сте по-запознати).
+Те ви позволяват да се абстрахирате от поведението
+които могат да се споделят от различни типове.
+Кодът, който използва `trait`, могат да
+изразяват идеите си по много общи и гъвкави начини.
+Това обаче означава, че може да стане трудно за четене.
+Не позволявайте на това да ви плаши:
+Дори хора, които са използвали Rust от години
+не разбират веднага какво прави генеричния код.
+А в този случай,
+помага да се мисли за конкретни употреби.
+Например,
+в нашия случай,
+поведението, което абстрахираме, е "пиши му / записване".
+Примери за типовете, които го имплементират ("impl")
+са :
+Стандартния изход на терминала,
+файлове,
+буфера в паметта,
+или интернет връзка чрез протокола `TCP`.
+(Скролнете надолу в [документацията за `std::io::Write`][`std::io::Write`]
+за да видите списък с "Имплементаторите".)
 
-With that knowledge,
-let's change our function to accept a third parameter.
-It should be of any type that implements `Write`.
-This way,
-we can then supply a simple string
-in our tests
-and make assertions on it.
-Here is how we can write this version of `find_matches`:
+С това знание,
+нека променим нашата функция, за да приеме трети параметър.
+Трябва да е от всякакъв тип, който изпълнява `Write`.
+По този начин,
+можем да предоставим прост низ
+в нашите тестове
+и да направим твърдения по него.
+Ето как можем да напишем тази версия на функцията `find_matches`:
 
 ```rust,ignore
 {{#include testing/src/main.rs:23:29}}
 ```
 
-The new parameter is `mut writer`,
-i.e., a mutable thing we call "writer".
-Its type is `impl std::io::Write`,
-which you can read as
-"a placeholder for any type that implements the `Write` trait".
-Also note how we
-replaced the `println!(…)`
-we used earlier
-with `writeln!(writer, …)`.
-`println!` works the same as `writeln!`
-but always uses standard output.
+Новия параметър е `mut writer`,
+т.е., променливо, което наричаме "writer".
+Типът му е `impl std::io::Write`,
+което можете да прочетете като
+"контейнер за всеки тип, който имплементира `Write trait`".
+Също така обърнете внимание как
+заменихме `println!(…)`
+, което използвахме по-рано
+с `writeln!(writer, …)`.
+`println!` работи по същия начин като `writeln!`
+но винаги използва стандартния изход.
 
-Now we can test for the output:
+Сега можем да тестваме изхода:
 
 ```rust,ignore
 {{#include testing/src/main.rs:31:36}}
 ```
 
-To now use this in our application code,
-we have to change the call to `find_matches` in `main`
-by adding [`&mut std::io::stdout()`][stdout] as the third parameter.
-Here's an example of a main function
-that builds on what we've seen in the previous chapters
-and uses our extracted `find_matches` function:
+За да използваме това в кода на нашето приложение,
+трябва да променим извикването на `find_matches` в функцията `main`
+като добавим [`&mut std::io::stdout()`][stdout] като трети параметър.
+Ето и пример с основната функция
+който се основава на това, което видяхме в предишните глави
+и използва нашата извлечена функция `find_matches`:
 
 ```rust,ignore
 {{#include testing/src/main.rs:13:21}}
@@ -249,169 +248,168 @@ and uses our extracted `find_matches` function:
 
 <aside class="note">
 
-**Note:**
-Since `stdout` expects bytes (not strings),
-we use `std::io::Write` instead of `std::fmt::Write`.
-As a result,
-we give an empty vector as "writer" in our tests
-(its type will be inferred to `Vec<u8>`),
-in the `assert_eq!` we use a `b"foo"`.
-(The `b` prefix makes this a _byte string literal_
-so its type is going to be `&[u8]` instead of `&str`).
+**Забележка:**
+Тъй като `stdout` очаква байтове,
+използваме `std::io::Write` вместо `std::fmt::Write`.
+Като резултат,
+даваме празен вектор(лист) за "записване на резултатите" в нашия тест
+(неговият тип ще бъде `Vec<u8>`),
+в `assert_eq!` използваме `b"foo"`.
+(Префикса `b` го превръща в *байтов низов литерал*
+така че неговият тип ще бъде `&[u8]` вместо `&str`).
 
 </aside>
 
 <aside class="note">
 
-**Note:**
-We could also make this function return a `String`,
-but that would change its behavior.
-Instead of writing to the terminal directly,
-it would then collect everything into a string,
-and dump all the results in one go at the end.
+**Забележка:**
+Можем също да накараме тази функция да връща `String`,
+но това би променило поведението му.
+Вместо да изпринтира директно на терминала,
+това ще събере всичко в низ,
+и ще извади целия резултат наведнъж в края.
 
 </aside>
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-[`writeln!`] returns an [`io::Result`]
-because writing can fail,
-for example when the buffer is full and cannot be expanded.
-Add error handling to `find_matches`.
+**Упражнение за читателя:**
+[`writeln!`] връща [`io::Result`]
+защото писането може да се провали,
+например когато буферът е пълен и не може да бъде разширен.
+Добавяне на обработка на грешки към функцията `find_matches`.
 
 [`writeln!`]: https://doc.rust-lang.org/1.39.0/std/macro.writeln.html
 [`io::Result`]: https://doc.rust-lang.org/1.39.0/std/io/type.Result.html
 
 </aside>
 
-We've just seen how to make this piece of code easily testable.
-We have
+Току-що видяхме как да направим тази част от кода лесна за тестване.
+Имаме
 
-1. identified one of the core pieces of our application,
-2. put it into its own function,
-3. and made it more flexible.
+1. идентифицирахме една от основните части на нашето приложение,
+2. поставихме го в неговата собствена функция,
+3. и го направихме по-гъвкав.
 
-Even though the goal was to make it testable,
-the result we ended up with
-is actually a very idiomatic and reusable piece of Rust code.
-That's awesome!
+Въпреки че целта беше да го направим тестван,
+резултатът, до който стигнахме
+всъщност е много идиоматично и многократно използвано парче от Rust кода.
+Това е страхотно!
 
-## Splitting your code into library and binary targets
+## Разделяне на вашия код на библиотечни и изпълняеми цели
 
-We can do one more thing here.
-So far we've put everything we wrote into the `src/main.rs` file.
-This means our current project produces a single binary.
-But we can also make our code available as a library, like this:
+Тук можем да направим още нещо.
+Досега сме поставили всичко, което сме написали в файла `src/main.rs`.
+Това означава, че текущият ни проект произвежда един изпълняем файл.
+Но можем също да направим нашия код достъпен като библиотека, като:
 
-1. Put the `find_matches` function into a new `src/lib.rs`.
-2. Add a `pub` in front of the `fn` (so it's `pub fn find_matches`)
-   to make it something that users of our library can access.
-3. Remove `find_matches` from `src/main.rs`.
-4. In the `fn main`, prepend the call to `find_matches` with `grrs::`,
-   so it's now `grrs::find_matches(…)`.
-   This means it uses the function from the library we just wrote!
+1. Поставяме функцията `find_matches` в нов `src/lib.rs` файл.
+2. Добавяме`pub` в началото на `fn` (така че да изглежда така `pub fn find_matches`)
+   за да стане нещо, до което потребителите на нашата библиотека да имат достъп.
+3. Премахваме `find_matches` от файла `src/main.rs`.
+4. И в `fn main` функцията, добавяме повикването към `find_matches` с `grrs::`,
+   така че сега да изглежда по този начин: `grrs::find_matches(…)`.
+   това означава, че използваме функцията от библиотеката, която току-що написахме!
 
-The way Rust deals with projects is quite flexible
-and it's a good idea to think about
-what to put into the library part of your crate early on.
-You can for example think about writing a library
-for your application-specific logic first
-and then use it in your CLI just like any other library.
-Or, if your project has multiple binaries,
-you can put the common functionality into the library part of that crate.
+Начинът, по който Rust се справя с проекти, е доста гъвкав
+и е добра идея да помислите
+какво да поставите като библеотеката в проекта си още от началото.
+Можете, например, да помислите за писане на библиотека
+първо за специфична за вашето приложението логика
+и след това да го използвате във вашия CLI приложение точно като всяка друга библиотека.
+Или, ако вашият проект има множество изпълняеми файлове,
+можете да поставите общата функционалност в отделна с библиотечка за проекта.
 
 <aside class="note">
 
-**Note:**
-Speaking of putting everything into a `src/main.rs`:
-If we continue to do that,
-it'll become difficult to read.
-The [module system] can help you structure and organize your code.
+**Забележка:**
+Говорейки за поставяне на всичко в файла `src/main.rs`:
+Ако продължим да правим това,
+ще стане трудно за четене.
+[Модулната система] може да ви помогне да структурирате и организирате кода си.
 
-[module system]: https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
+[Модулната система]: https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
 
 </aside>
 
+## Тестване на CLI приложения чрез стартирането им
 
-## Testing CLI applications by running them
+Дотук малко се отклонихме от темата
+, за да тестваме *бизнес логиката* на нашата програма,
+което се оказа функцията `find_matches`.
+Това е много ценна
+и страхотна първа стъпка
+към добре тествана кодова база.
+(Обикновено тези видове тестове се наричат "unit" тестове.)
 
-Thus far, we've gone out of our way
-to test the _business logic_ of our application,
-which turned out to be the `find_matches` function.
-This is very valuable
-and is a great first step
-towards a well-tested code base.
-(Usually, these kinds of tests are called "unit tests".)
+Обаче има много код, който не тестваме:
+Всичко, което напишем, за да се справим с външния свят!
+Представете си, че сте написали основната функция,
+но случайно оставяте твърдо кодиран низ (статичен низ)
+вместо да използвате аргумента на предоставения от потребителя път.
+Трябва да пишем тестове и за това!
+(Това ниво на тестване често се нарича
+"интеграционно тестване", или "тестване на система".)
 
-There is a lot of code we aren't testing, though:
-Everything that we wrote to deal with the outside world!
-Imagine you wrote the main function,
-but accidentally left in a hard-coded string
-instead of using the argument of the user-supplied path.
-We should write tests for that, too!
-(This level of testing is often called
-"integration testing", or "system testing".)
-
-At its core,
-we are still writing functions
-and annotating them with `#[test]`.
-It's just a matter of what we do inside these functions.
-For example, we'll want to use the main binary of our project,
-and run it like a regular program.
-We will also put these tests into a new file in a new directory:
+В основата си,
+все още пишем функции
+и ги анотираме с `#[test]`.
+Въпросът е само какво правим вътре в тези функции.
+Например, ще искаме да използваме основния изпълняем файл на нашия проект
+и да го стартираме като обикновена програма.
+Също така ще поставим тези тестове в нов файл в нова директория:
 `tests/cli.rs`.
 
 <aside>
 
-**Note:**
-By convention,
-`cargo` will look for integration tests in the `tests/` directory.
-Similarly,
-it will look for benchmarks in `benches/`,
-and examples in `examples/`.
-These conventions also extend to your main source code:
-libraries have a `src/lib.rs` file,
-the main binary is `src/main.rs`,
-or, if there are multiple binaries,
-cargo expects them to be in `src/bin/<name>.rs`.
-Following these conventions will make your code base more discoverable
-by people used to reading Rust code.
+**Забележка:**
+По конвенция,
+`cargo` ще търси интеграционни тестове в `tests/` директорията.
+По същия начин,
+ще за бенчмарковете в `benches/`,
+и за примерите в `examples/`.
+Тези конвенции се разпростират и върху вашия основен изходен код:
+библеотеките имат `src/lib.rs` файл,
+главния изпълням файл е `src/main.rs`,
+или, ако има множество такива файлове,
+cargo очаква те да бъдат така `src/bin/<name>.rs`.
+Следването на тези конвенции ще направи кодовата ви база по-откриваема
+от хора, свикнали да четат код на Rust.
 
 </aside>
 
-To recall,
-`grrs` is a small tool that searches for a string in a file.
-We have previously tested that we can find a match.
-Let's think about what other functionality we can test.
+Да си припомним,
+`grrs` е малък инструмент, който търси низ във файл.
+Преди това тествахме дали можем да намерим съвпадение.
+Нека помислим каква друга функционалност можем да тестваме.
 
-Here is what I came up with.
+Ето какво измислих.
 
-- What happens when the file doesn't exist?
-- What is the output when there is no match?
-- Does our program exit with an error when we forget one (or both) arguments?
+- Какво се случва, когато файлът не съществува?
+- Какъв е резултатът, когато няма съвпадение?
+- Програмата ни излиза ли с грешка, когато забравим един (или и двата) аргумента?
 
-These are all valid test cases.
-Additionally,
-we should also include one test case
-for the "happy path",
-i.e., we found at least one match
-and we print it.
+Това са всички валидни тестови случаи.
+Освен това,
+трябва да включим и един тестов случай
+за "щастливия път",
+т.е. намерихме поне едно съвпадение
+и го отпечатваме.
 
-To make these kinds of tests easier,
-we're going to use the [`assert_cmd`] crate.
-It has a bunch of neat helpers
-that allow us to run our main binary
-and see how it behaves.
-Further,
-we'll also add the [`predicates`] crate
-which helps us write assertions
-that `assert_cmd` can test against
-(and that have great error messages).
-We'll add those dependencies not to the main list,
-but to a "dev dependencies" section in our `Cargo.toml`.
-They are only required when developing the crate,
-not when using it.
+За да улесните тези видове тестове,
+ще използваме библеотеката [`assert_cmd`].
+Има куп спретнати помощници
+, които ни позволяват да изпълняваме основния си изпълняем файл
+, за да видим как се държи.
+По-нататък,
+също ще добавим и библеотеката [`predicates`]
+което ни помага да пишем твърдения
+, срещу което `assert_cmd` може да тества
+(и които имат страхотни съобщения за грешки).
+Ще добавим тези зависимости не към основния списък,
+но към "dev dependencies" секцията в нашия `Cargo.toml`.
+Те са необходими само при разработване на приложението ви,
+, а не когато го използвате.
 
 ```toml
 {{#include testing/Cargo.toml:16:18}}
@@ -420,43 +418,43 @@ not when using it.
 [`assert_cmd`]: https://docs.rs/assert_cmd
 [`predicates`]: https://docs.rs/predicates
 
-This sounds like a lot of setup.
-Nevertheless –
-let's dive right in
-and create our `tests/cli.rs` file:
+Това звучи като много за настройване.
+Въпреки това –
+нека директно да се потопим
+и да създадем нашия `tests/cli.rs` файл:
 
 ```rust,ignore
 {{#include testing/tests/cli.rs:1:15}}
 ```
 
-You can run this test with
+Можете да изпълните този тест с
 `cargo test`,
-just like the tests we wrote above.
-It might take a little longer the first time,
-as `Command::cargo_bin("grrs")` needs to compile your main binary.
+точно като тестовете, които написахме по-горе.
+Може да отнеме малко повече време първия път,
+тъй като `Command::cargo_bin("grrs")` компилира главния ви изпълняем файл.
 
-## Generating test files
+## Генериране на тестови файлове
 
-The test we've just seen only checks that our program writes an error message
-when the input file doesn't exist.
-That's an important test to have,
-but maybe not the most important one:
-Let's now test that we will actually print the matches we found in a file!
+Тестът, който току-що видяхме, проверява само дали нашата програма връща съобщение за грешка
+когато входният файл не съществува.
+Това е важен тест,
+но може би не най-важния:
+Нека сега да тестваме дали наистина ще отпечатаме съвпаденията, които намерихме във файл!
 
-We'll need to have a file whose content we know,
-so that we can know what our program _should_ return
-and check this expectation in our code.
-One idea might be to add a file to the project with custom content
-and use that in our tests.
-Another would be to create temporary files in our tests.
-For this tutorial,
-we'll have a look at the latter approach.
-Mainly, because it is more flexible and will also work in other cases;
-for example, when you are testing programs that change the files.
+Ще трябва да имаме файл, чието съдържание знаем,
+за да можем да знаем какво *трябва* да върне нашата програма
+и да проверим дали е очакваното в нашия код.
+Една идея може да е да добавите файл към проекта с персонализирано съдържание
+и да го използвате в тестове си.
+Друг начин би било да създадем временни файлове в нашите тестове.
+За този урок,
+ще разгледаме последния подход.
+Основно, защото е по-гъвкав и ще работи и в други случаи;
+например, когато тествате програми, които променят файловете.
 
-To create these temporary files,
-we'll be using the [`assert_fs`] crate.
-Let's add it to the `dev-dependencies` in our `Cargo.toml`:
+За да създадете тези временни файлове,
+ще трябва да използвате библеотеката [`assert_fs`].
+Нека го добавим към `dev-dependencies` в нашия `Cargo.toml` файл:
 
 ```toml
 {{#include testing/Cargo.toml:19}}
@@ -464,16 +462,16 @@ Let's add it to the `dev-dependencies` in our `Cargo.toml`:
 
 [`assert_fs`]: https://docs.rs/assert_fs
 
-Here is a new test case
-(that you can write below the other one)
-that first creates a temp file
-(a "named" one so we can get its path),
-fills it with some text,
-and then runs our program
-to see if we get the correct output.
-When the `file` goes out of scope
-(at the end of the function),
-the actual temporary file will automatically get deleted.
+Ето нов тестов случай
+(което можете да напишете под другото)
+, в който първо създавате временен файл
+("наименуван", за да можем да получим пътя му),
+изпълвайте го с някакъв текст,
+и след това изпълнете вашата програма
+, за да видите дали получаваме правилния резултат.
+Когато `file` излиза извън блока
+(в края на функцията),
+действителният временен файл автоматично ще бъде изтрит.
 
 ```rust,ignore
 {{#include testing/tests/cli.rs:17:32}}
@@ -481,49 +479,49 @@ the actual temporary file will automatically get deleted.
 
 <aside class="exercise">
 
-**Exercise for the reader:**
-Add integration tests for passing an empty string as pattern.
-Adjust the program as needed.
+**Упражнение за читателя:**
+Добавете интеграционни тестове за предаване на празен низ като шаблон.
+Коригирайте програмата според нуждите.
 
 </aside>
 
-## What to test?
+## Какво да тествате?
 
-While it can certainly be fun to write integration tests,
-it will also take some time to write them,
-as well as to update them when your application's behavior changes.
-To make sure you use your time wisely,
-you should ask yourself what you should test.
+Въпреки че, със сигурност, може да бъде забавно да се пишат интеграционни тестове,
+ще ви отнеме известно време да ги напишете,
+както и да ги актуализирате, когато поведението на вашето приложение се промени.
+За да сте сигурни, че използвате времето си разумно,
+трябва да се запитате какво трябва да тествате.
 
-In general it's a good idea to write integration tests
-for all types of behavior that a user can observe.
-That means that you don't need to cover all edge cases:
-It usually suffices to have examples for the different types
-and rely on unit tests to cover the edge cases.
+Като цяло е добра идея да се пишат интеграционни тестове
+за всички видове поведения, които потребителят може да наблюдава.
+Това означава, че не е необходимо да покривате всички крайни случаи:
+Обикновено е достатъчно да има примери за различните типове
+и да разчитайте на `unit` тестове, за да покриете крайните случаи.
 
-It is also a good idea not to focus your tests on things you can't actively control.
-It would be a bad idea to test the exact layout of `--help`
-as it is generated for you.
-Instead, you might just want to check that certain elements are present.
+Също така е добра идея да не фокусирате тестовете си върху неща, които не можете да контролирате активно.
+Би било лоша идея да тествате точното оформление на `--help`
+тъй като се генерира за вас.
+Вместо това може просто да искате да проверите дали определени елементи присъстват.
 
-Depending on the nature of your program,
-you can also try to add more testing techniques.
-For example,
-if you have extracted parts of your program
-and find yourself writing a lot of example cases as unit tests
-while trying to come up with all the edge cases,
-you should look into [`proptest`].
-If you have a program which consumes arbitrary files and parses them,
-try to write a [fuzzer] to find bugs in edge cases.
+В зависимост от естеството на вашата програма,
+можете също да опитате да добавите още техники за тестване.
+Например,
+ако сте извлекли части от вашата програма
+и установете, че пишете много примерни случаи като `unit` тестове
+докато се опитвате да измислите всички крайни случаи,
+трябва да разгледате [`proptest`].
+Ако имате програма, която използва произволни файлове и ги анализира,
+опитайте се да напишете с техниката [fuzzer], за да намирате бъгове в крайните случаи.
 
 [`proptest`]: https://docs.rs/proptest
 [fuzzer]: https://rust-fuzz.github.io/book/introduction.html
 
 <aside>
 
-**Note:**
-You can find the full, runnable source code used in this chapter
-[in this book's repository][src].
+**Забележка:**
+Можете да намерите пълния изпълним изходен код, използван в тази глава
+[в хранилището на тази книга][src].
 
 [src]: https://github.com/rust-cli/book/tree/master/src/tutorial/testing
 
