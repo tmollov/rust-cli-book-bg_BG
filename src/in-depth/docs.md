@@ -1,12 +1,12 @@
-# Rendering documentation for your CLI apps
+# Рендиране на документация за вашето конзолно приложение
 
-Documentation for CLIs usually consists of
-a `--help` section in the command
-and a manual (`man`) page.
+Документации за конзолните приложения предимно се състои
+в секция на командата `--help`
+и страницата на `man`.
 
-Both can be automatically generated
-when using [`clap`](https://crates.io/crates/clap), via
-[`clap_mangen`](https://crates.io/crates/clap_mangen) crate.
+И двете могат да се генерират автоматично
+когато използвате [`clap`](https://crates.io/crates/clap), чрез
+библиотеката [`clap_mangen`](https://crates.io/crates/clap_mangen).
 
 ```rust,ignore
 #[derive(Parser)]
@@ -19,16 +19,16 @@ pub struct Head {
 }
 ```
 
-Secondly, you need to use a `build.rs`
-to generate the manual file at compile time
-from the definition of your app
-in code.
+Второ, трябва да използвате `build.rs`
+за да генерирате ръчен файл по време на компилиране
+от дефиницията на вашето приложение
+в кода.
 
-There are a few things to keep in mind
-(such as how you want to package your binary)
-but for now
-we simply put the `man` file
-next to our `src` folder.
+Трябва да имате предвид няколко неща
+(като например как искате да опаковате своя изпълняем файл)
+но засега
+ние просто поставяме файла `man`
+до нашата папка `src`.
 
 ```rust,ignore
 use clap::CommandFactory;
@@ -50,9 +50,9 @@ fn main() -> std::io::Result<()> {
 }
 ```
 
-When you now compile your application
-there will be a `head.1` file
-in your project directory.
+Когато сега компилирате вашето приложение
+ще има файл `head.1`
+в директорията на вашия проект.
 
-If you open that in `man`
-you'll be able to admire your free documentation.
+Ако отворите това в `man`.
+ще можете да се насладите на вашата безплатна документация.

@@ -1,18 +1,18 @@
-# Using config files
+# Използване на конфигурационни файлове
 
-Dealing with configurations can be annoying
-especially if you support multiple operating systems
-which all have their own places
-for short- and long-term files.
+Работата с конфигурации може да бъде досадна
+особено ако поддържате няколко операционни системи
+които всички имат свои собствени места
+за краткосрочни и дългосрочни файлове.
 
-There are multiple solutions to this,
-some being more low-level than others.
+Има множество решения за този проблем,
+някои дето са на по-ниско ниво от други.
 
-The easiest crate to use for this is [`confy`].
-It asks you for the name of your application
-and requires you to specify the config layout
-via a `struct` (that is `Serialize`, `Deserialize`)
-and it will figure out the rest!
+Най-лесния начин е да използвате библеотеката [`confy`].
+Той ви пита за името на вашето приложение
+и изисква да посочите оформлението на конфигурацията
+чрез `struct` (което наследява `Serialize`, `Deserialize`)
+и то ще разбере останалото!
 
 ```rust,ignore
 #[derive(Debug, Serialize, Deserialize)]
@@ -29,22 +29,22 @@ fn main() -> Result<(), io::Error> {
 }
 ```
 
-This is incredibly easy to use
-for which you of course surrender configurability.
-But if a simple config is all you want,
-this crate might be for you!
+Това е невероятно лесно за използване
+за което, разбира се, се отказвате от възможностите за конфигуриране.
+Но ако простата конфигурация е всичко, което искате,
+тази библиотека може да е за вас!
 
 [`confy`]: https://docs.rs/confy/0.3.1/confy/
 
-## Configuration environments
+## Конфигурационни среди
 
 <aside class="todo">
 
-**TODO**
+**Задачи**
 
-1. Evaluate crates that exist
-2. Cli-args + multiple configs + env variables
-3. Can [`configure`] do all this? Is there a nice wrapper around it?
+1. Оценете библиотеките, които съществуват
+2. Аргументи от конзолата + множество конфигурации + `env` променливи
+3. Може ли [`configure`] да направи всичко това? Има ли нещо хубаво, за да го обвием?
 
 </aside>
 

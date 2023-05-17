@@ -1,43 +1,46 @@
-# Resources
+# Ресурси
 
-Collaboration / help
-- [cli-and-tui Discord Channel](https://discord.com/channels/273534239310479360/943315667430563862)
+Сътрудничество / помощ
 
-## Crates referenced in this book
+- [Discord канала: cli-and-tui](https://discord.com/channels/273534239310479360/943315667430563862)
 
-- [anyhow](https://crates.io/crates/anyhow) - provides `anyhow::Error` for easy error handling
-- [assert_cmd](https://crates.io/crates/assert_cmd) - simplifies integration testing of CLIs
-- [assert_fs](https://crates.io/crates/assert_fs) - Setup input files and test output files
-- [clap-verbosity-flag](https://crates.io/crates/clap-verbosity-flag) - adds a `--verbose` flag to clap CLIs
-- [clap](https://crates.io/crates/clap) - command line argument parser
-- [confy](https://crates.io/crates/confy) - boilerplate-free configuration management
-- [crossbeam-channel](https://crates.io/crates/crossbeam-channel) - provides multi-producer multi-consumer channels for message passing
-- [ctrlc](https://crates.io/crates/ctrlc) - easy ctrl-c handler
-- [env_logger](https://crates.io/crates/env_logger) - implements a logger configurable via environment variables
-- [exitcode](https://crates.io/crates/exitcode) - system exit code constants
-- [human-panic](https://crates.io/crates/human-panic) - panic message handler
-- [indicatif](https://crates.io/crates/indicatif) - progress bars and spinners
-- [is-terminal](https://crates.io/crates/is-terminal) - detected whether application is running in a tty
-- [log](https://crates.io/crates/log) - provides logging abstracted over implementation
-- [predicates](https://crates.io/crates/predicates) - implements boolean-valued predicate functions
-- [proptest](https://crates.io/crates/proptest) - property testing framework
-- [serde_json](https://crates.io/crates/serde_json) - serialize/deserialize to JSON
-- [signal-hook](https://crates.io/crates/signal-hook) - handles UNIX signals
-- [tokio](https://crates.io/crates/tokio) - asynchronous runtime
-- [wasm-pack](https://crates.io/crates/wasm-pack) - tool for building WebAssembly
+## Библиотеки, посочени в тази книга
 
-## Other crates
+- [anyhow](https://crates.io/crates/anyhow) - осигурява `anyhow::Error` за лесно обработване на грешки
+- [assert_cmd](https://crates.io/crates/assert_cmd) - опростява интеграционното тестване на конзолни приложения
+- [assert_fs](https://crates.io/crates/assert_fs) - настройва входните файлове и тества изходните файлове
+- [clap-verbosity-flag](https://crates.io/crates/clap-verbosity-flag) - добавя `--verbose` флаг чрез `clap`
+- [clap](https://crates.io/crates/clap) - анализатор на аргументите на командния ред
+- [confy](https://crates.io/crates/confy) - управление на конфигурацията без шаблони
+- [crossbeam-channel](https://crates.io/crates/crossbeam-channel) - осигурява канали за множество собственици и множество потребители за предаване на съобщения
+- [ctrlc](https://crates.io/crates/ctrlc) - лесен манипулатор за ctrl-c
+- [env_logger](https://crates.io/crates/env_logger) - внедрява регистратор, конфигурируем чрез променливи на средата
+- [exitcode](https://crates.io/crates/exitcode) - константи на изходните коде на системата
+- [human-panic](https://crates.io/crates/human-panic) - манипулатор на паник съобщения
+- [indicatif](https://crates.io/crates/indicatif) - ленти за прогрес и спинери
+- [is-terminal](https://crates.io/crates/is-terminal) - открива дали приложението работи в tty
+- [log](https://crates.io/crates/log) - осигурява логване, абстрахирано от изпълнението
+- [predicates](https://crates.io/crates/predicates) - прилага предикатни функции с булеви стойности
+- [proptest](https://crates.io/crates/proptest) - рамка за тестване на свойства
+- [serde_json](https://crates.io/crates/serde_json) - sсериализиране/десериализиране към JSON
+- [signal-hook](https://crates.io/crates/signal-hook) - обработва UNIX сигнали
+- [tokio](https://crates.io/crates/tokio) - за асинхронно изпълнение
+- [wasm-pack](https://crates.io/crates/wasm-pack) - инструмент за изграждане на WebAssembly
 
-Due to the constantly-changing landscape of Rust crates, a good place to find
-crates is the [lib.rs](https://lib.rs) crate index, including:
-- [Command-line interface](https://lib.rs/command-line-interface)
-- [Configuration](https://lib.rs/config)
-- [Database interfaces](https://lib.rs/database)
-- [Encoding](https://lib.rs/encoding)
-- [Filesystem](https://lib.rs/filesystem)
-- [HTTP Client](https://lib.rs/web-programming/http-client)
-- [Operating systems](https://lib.rs/os)
+## Други библиотеки
 
-Other resources:
+Поради постоянно променящия се пейзаж на библиотеките на Rust, добро място за намиране
+библиотеки е [lib.rs](https://lib.rs), включително:
+
+- [Интерфейс за конзоли](https://lib.rs/command-line-interface)
+- [Конфигурации](https://lib.rs/config)
+- [Интерфейси за бази данни](https://lib.rs/database)
+- [Кодиране](https://lib.rs/encoding)
+- [Файлова система](https://lib.rs/filesystem)
+- [HTTP Клиент](https://lib.rs/web-programming/http-client)
+- [Операционна система](https://lib.rs/os)
+
+Други ресурси:
+
 - [Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/)
 - [rosetta-rs](https://github.com/rosetta-rs)

@@ -1,35 +1,35 @@
-# Exit codes
+# Кодове за изход
 
-A program doesn't always succeed.
-And when an error occurs,
-you should make sure to emit the necessary information correctly.
-In addition to
-[telling the user about errors](human-communication.html),
-on most systems,
-when a process exits,
-it also emits an exit code
-(an integer between 0 and 255 is compatible with most platforms).
-You should try to emit the correct code
-for your program's state.
-For example,
-in the ideal case when your program succeeds,
-it should exit with `0`.
+Работата на една програма не винаги завършва успешно.
+И когато възникне грешка,
+трябва да се уверите, че предавате правилно необходимата информация.
+В допълнение към
+[уведомяването на потребителите за грешки](human-communication.html),
+на повечето системи,
+когато процесът излезе,
+той също предава код за изход
+(цяло число между 0 и 255 е съвместимо с повечето платформи).
+Трябва да опитате да предавате правилния код
+за състоянието на вашата програма.
+Например,
+в идеалния случай, когато вашата програма завърши успешно,
+то трябва да излезе с код `0`.
 
-When an error occurs, it gets a bit more complicated, though.
-In the wild,
-many tools exit with `1` when a common failure occurs.
-Currently, Rust sets an exit code of `101` when the process panicked.
-Beyond that, people have done many things in their programs.
+Когато се появи грешка нещата стават малко по сложни.
+В реалния свят,
+много инструменти излизат с код `1` когато възникне обща грешка.
+В момента Rust задава код за изход `101`, когато процесът се паникьоса.
+Освен това хората са направили много неща в своите програми.
 
-So, what to do?
-The BSD ecosystem has collected a common definition for their exit codes
-(you can find them [here][`sysexits.h`]).
-The Rust library [`exitcode`] provides these same codes,
-ready to be used in your application.
-Please see its API documentation for the possible values to use.
+И така, какво да правим?
+Екосистемата `BSD` е събрала обща дефиниция за техните изходни кодове
+(можете да ги намерите [тук][`sysexits.h`]).
+Библиотеката [`exitcode`] предоставя същите тези кодове,
+готови за използване във вашето приложение.
+Моля, вижте неговата API документация за възможните стойности, които да използвате.
 
-After you add the `exitcode` dependency to your `Cargo.toml`,
-you can use it like this:
+След като добавите зависимостта `exitcode` към вашия `Cargo.toml`,
+можете да го използвате така:
 
 ```rust,ignore
 fn main() {
@@ -50,7 +50,6 @@ fn main() {
     }
 }
 ```
-
 
 [`exitcode`]: https://crates.io/crates/exitcode
 [`sysexits.h`]: https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+11.2-stable&arch=default&format=html

@@ -1,4 +1,4 @@
-# In-depth topics
+# Задълбочени теми
 
-A small collection of chapters covering some more details
-that you might care about when writing your command line application.
+Малка колекция от глави, обхващаща повече подробности
+които може да ви интересуват, когато пишете вашето приложение за команден ред.

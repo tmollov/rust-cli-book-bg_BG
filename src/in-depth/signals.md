@@ -1,64 +1,63 @@
-# Signal handling
+# Обработка на сигнали
 
-Processes
-like command line applications
-need to react to signals sent by the operating system.
-The most common example is probably <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-the signal that typically tells a process to terminate.
-To handle signals in Rust programs
-you need to consider how you can receive these signals
-as well as how you can react to them.
+Процеси,
+като приложения от командния ред,
+трябва да реагира на сигнали, изпратени от операционната система.
+Най-често срещаният пример е може би <kbd>Ctrl</kbd>+<kbd>C</kbd>,
+сигналът, който обикновено казва на процес да прекрати.
+За обработка на сигнали в програми на Rust
+трябва да обмислите как можете да получавате тези сигнали
+както и как можете да реагирате на тях.
 
 <aside>
 
-**Note:**
-If your applications does not need to gracefully shutdown,
-the default handling is fine
-(i.e. exit immediately
-and let the OS cleanup resources like open file handles).
-In that case:
-No need to do what this chapter tells you!
+**Забележка:**
+Ако вашите приложения не се нуждаят от елегантно изключване,
+обработката по подразбиране е достатъчна
+(т.е. излезте веднага
+и оставяте операционната система да почиства ресурсите, като манипулатори за отваряне на файлове и др.).
+В този случай:
+Няма нужда да правите това, което ви казва тази глава!
 
-However,
-for applications that need to clean up after themselves,
-this chapter is very relevant!
-For example,
-if your application needs to
-properly close network connections
-(saying "good bye" to the processes at the other end),
-remove temporary files,
-or reset system settings,
-read on.
+Обаче,
+за приложения, които трябва да почистват след себе си,
+тази глава е много подходяща!
+Например,
+ако приложението ви трябва
+правилно да затвори мрежовите връзки
+(казвайки "довиждане" на процесите в другия край),
+да премахва временни файлове,
+или да нулира системните настройки,
+прочетете нататък.
 
 </aside>
 
-## Differences between operating systems
+## Разлики между операционните системи
 
-On Unix systems
-(like Linux, macOS, and FreeBSD)
-a process can receive [signals].
-It can either react to them
-in a default (OS-provided) way,
-catch the signal and handle them in a program-defined way,
-or ignore the signal entirely.
+В `Unix` системи
+(като Linux, macOS, и FreeBSD)
+даден процес може да получи [сигнали].
+То може или да реагира на тях
+по стандартен (осигурен от операционната система) начин,
+да хване сигнала и да го обработва по програмно дефиниран начин,
+или да игнорира сигнала напълно.
 
-[signals]: https://manpages.ubuntu.com/manpages/bionic/en/man7/signal.7.html
+[сигнали]: https://manpages.ubuntu.com/manpages/bionic/en/man7/signal.7.html
 
-Windows does not have signals.
-You can use [Console Handlers]
-to define callbacks that get executed when an event occurs.
-There is also [structured exception handling]
-which handles all the various types of system exceptions such as division by zero, invalid access exceptions, stack overflow, and so on
+`Windows` няма сигнали.
+Можеш да използваш [Конзолни манипулатори]
+за дефиниране на обратни извиквания, които се изпълняват при възникване на събитие.
+Има и [структурирана обработка на грешките]
+който обработва всички различни видове системни грешки като делене на нула, грешки за невалиден достъп, препълване на стека и т.н.
 
-[Console Handlers]: https://docs.microsoft.com/en-us/windows/console/console-control-handlers
-[structured exception handling]: https://docs.microsoft.com/en-us/windows/desktop/debug/structured-exception-handling
+[Конзолни манипулатори]: https://docs.microsoft.com/en-us/windows/console/console-control-handlers
 
-## First off: Handling Ctrl+C
+## Първо: Обработване на Ctrl+C
 
-The [ctrlc] crate does just what the name suggests:
-It allows you to react to the user pressing <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-in a cross-platform way.
-The main way to use the crate is this:
+Библиотеката [ctrlc] прави точно това, което подсказва името:
+Позволява ви да реагирате на сигналите от потребителя с <kbd>Ctrl</kbd>+<kbd>C</kbd>,
+по междуплатформен начин.
+Основният начин за използване на библиотеката е следният:
 
 [ctrlc]: https://crates.io/crates/ctrlc
 
@@ -66,31 +65,31 @@ The main way to use the crate is this:
 {{#include signals-ctrlc.rs}}
 ```
 
-This is, of course, not that helpful:
-It only prints a message but otherwise doesn't stop the program.
+Това, разбира се, не е толкова полезно:
+Той само отпечатва съобщение, но иначе не спира програмата.
 
-In a real-world program,
-it's a good idea to instead set a variable in the signal handler
-that you then check in various places in your program.
-For example,
-you can set an `Arc<AtomicBool>`
-(a boolean shareable between threads)
-in your signal handler,
-and in hot loops,
-or when waiting for a thread,
-you periodically check its value
-and break when it becomes true.
+В програма от реалния свят,
+добра идея е вместо това да зададете променлива в манипулатора на сигнали
+това и да го проверявате на различни места във вашата програма.
+Например,
+можете да зададете `Arc<AtomicBool>`
+(булева стойност за споделяне между нишки)
+във вашия манипулатор на сигнали,
+и във важни цикли,
+или когато чакате нишка,
+периодично да проверите стойността му
+и да спрете когато то стане `true`.
 
-## Handling other types of signals
+## Работа с други видове сигнали
 
-The [ctrlc] crate only handles <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-or, what on Unix systems would be called `SIGINT` (the "interrupt" signal).
-To react to more Unix signals,
-you should have a look at [signal-hook].
-Its design is described in [this blog post][signal-hook-post],
-and it is currently the library with the widest community support.
+Библиотеката [ctrlc] обработва само комбинацията <kbd>Ctrl</kbd>+<kbd>C</kbd>,
+или, как би се наричало в Unix системите `SIGINT` (сигнал за "прекъсване").
+За да реагирате на повече Unix сигнали,
+трябва да погледнете в [signal-hook].
+Дизайнът му е описан в [този блог][signal-hook-post],
+и в момента е библиотеката с най-широка обществена подкрепа.
 
-Here's a simple example:
+Ето и един прост пример:
 
 ```rust,ignore
 {{#include signals-hooked.rs}}
@@ -98,17 +97,17 @@ Here's a simple example:
 
 [signal-hook-post]: https://vorner.github.io/2018/06/28/signal-hook.html
 
-## Using channels
+## Използване на канали
 
-Instead of setting a variable
-and having other parts of the program check it,
-you can use channels:
-You create a channel into which the signal handler emits a value
-whenever the signal is received.
-In your application code you use
-this and other channels
-as synchronization points between threads.
-Using [crossbeam-channel] it would look something like this:
+Вместо да зададете променлива
+и да имате други части на програмата да я проверят,
+можете да използвате канали:
+Можете да създавате канали, в които манипулаторите на сигнали да излъчват стойности
+когато даден сигнал е приет.
+В кода на вашето приложение ги използвате
+тези и други канали
+като точки за синхронизация между нишки.
+Използвайки библиотеката [crossbeam-channel] то би изглеждало така:
 
 [crossbeam-channel]: https://crates.io/crates/crossbeam-channel
 
@@ -116,26 +115,26 @@ Using [crossbeam-channel] it would look something like this:
 {{#include signals-channels.rs}}
 ```
 
-## Using futures and streams
+## Използване на фючъри и потоци
 
-If you are using [tokio],
-you are most likely already writing your application
-with asynchronous patterns and an event-driven design.
-Instead of using crossbeam's channels directly,
-you can enable signal-hook's `tokio-support` feature.
-This allows you to call [`.into_async()`]
-on signal-hook's `Signals` types
-to get a new type that implements `futures::Stream`.
+Ако използвате [tokio],
+най-вероятно вече пишете вашето приложение
+с асинхронни модели и дизайн, управляван от събития.
+Вместо да използвате директно каналите на `crossbeam`,
+можете да активирате функцията `tokio-support` на signal-hook.
+Това ви позволява да извикате [`.into_async()`]
+върху типовете `Signals` от signal-hook
+за да получите нов тип, който имплементира `futures::Stream`.
 
 [signal-hook]: https://crates.io/crates/signal-hook
 [tokio]: https://tokio.rs/
 [`.into_async()`]: https://docs.rs/signal-hook/0.1.6/signal_hook/iterator/struct.Signals.html#method.into_async
 
-## What to do when you receive another Ctrl+C while you're handling the first Ctrl+C
+## Какво да направите, когато получите друга Ctrl+C докато се справяте с първия Ctrl+C
 
-Most users will press <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-and then give your program a few seconds to exit,
-or tell them what's going on.
-If that doesn't happen,
-they will press <kbd>Ctrl</kbd>+<kbd>C</kbd> again.
-The typical behavior is to have the application quit immediately.
+Повечето потребители ще натиснат <kbd>Ctrl</kbd>+<kbd>C</kbd>,
+и след това ще изчакат програмата ви няколко секунди да излезе,
+или да им кажете какво става.
+Ако това не се случи,
+ще натискат <kbd>Ctrl</kbd>+<kbd>C</kbd> отново и отново.
+Типичното поведение е приложението да се затвори незабавно.

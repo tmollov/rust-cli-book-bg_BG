@@ -1,54 +1,54 @@
-# Communicating with humans
+# Общуване с хора
 
-Make sure to read [the chapter on CLI output][output]
-in the tutorial first.
-It covers how to write output to the terminal,
-while this chapter will talk about _what_ to output.
+Не забравяйте да прочетете [главата за изхода към терминала][output]
+в първото ръководство.
+Той обхваща как да запишете изход към терминала,
+докато тази глава ще говори за _какво_ да се изведе.
 
 [output]: ../tutorial/output.html
 
-## When everything is fine
+## Когато всичко е наред
 
-It is useful to report on the application's progress
-even when everything is fine.
-Try to be informative and concise in these messages.
-Don't use overly technical terms in the logs.
-Remember:
-the application is not crashing
-so there's no reason for users to look up errors.
+Полезно е да докладвате за напредъка на приложението
+дори когато всичко е наред.
+Опитайте се да бъдете информативни и кратки в тези съобщения.
+Не използвайте прекалено технически термини в регистрационните файлове.
+Запомнете:
+приложението не се срива
+така че няма причина потребителите да търсят грешки.
 
-Most importantly,
-be consistent in the style of communication.
-Use the same prefixes and sentence structure
-to make the logs easily skimmable.
+Най-важното,
+бъдете постоянни в стила на общуване.
+Използвайте същите префикси и структура на изреченията
+за да направите логовете лесни за разбиране.
 
-Try to let your application output tell a story
-about what it's doing
-and how it impacts the user.
-This can involve showing a timeline of steps involved
-or even a progress bar and indicator for long-running actions.
-The user should at no point
-get the feeling that the application is doing something mysterious
-that they cannot follow.
+Опитайте се да оставите изхода на вашето приложение да разказва история
+за това какво прави
+и как се отразява на потребителя.
+Това може да включва показване на времева линия на включените стъпки
+или дори лента за напредък и индикатор за дълготрайни действия.
+Потребителят не трябва в нито един момент
+да има чувството, че приложението прави нещо мистериозно
+и че не могат да го следват.
 
-## When it's hard to tell what's going on
+## Когато е трудно да се каже какво се случва
 
-When communicating non-nominal state it's important to be consistent.
-A heavily logging application that doesn't follow strict logging levels
-provides the same amount, or even less information
-than a non-logging application.
+Когато комуникирате неноминално състояние, важно е да сте последователни.
+Приложение със силно логване, което не следва стриктни нива на регистриране
+предоставя същото количество или дори по-малко информация
+отколкото приложение без логове.
 
-Because of this,
-it's important to define the severity of events
-and messages that are related to it;
-then use consistent log levels for them.
-This way users can select the amount of logging themselves
-via `--verbose` flags
-or environment variables (like `RUST_LOG`).
+Заради това,
+важно е да се определи сериозността на събитията
+и съобщения, които са свързани с него;
+след това използвайте последователни нива на логове за тях.
+По този начин потребителите могат сами да избират количеството логове
+чрез флагове `--verbose`
+или променливи на средата (като `RUST_LOG`).
 
-The commonly used `log` crate
-[defines][log-levels] the following levels
-(ordered by increasing severity):
+Често използваната библиотеки за логваме `log`
+[дефинира][log-levels] следните нива
+(подредени по нарастваща тежест):
 
 - trace
 - debug
@@ -56,22 +56,22 @@ The commonly used `log` crate
 - warning
 - error
 
-It's a good idea to think of _info_ as the default log level.
-Use it for, well, informative output.
-(Some applications that lean towards a more quiet output style
-might only show warnings and errors by default.)
+Добра идея е да мислите за _info_ като ниво за логване по подразбиране.
+Използвайте го като информативен изход.
+(Някои приложения, които са клонни към по-тих стил на извеждане
+може да показва само предупреждения и грешки по подразбиране.)
 
-Additionally,
-it's always a good idea to use similar prefixes
-and sentence structure across log messages,
-making it easy to use a tool like `grep` to filter for them.
-A message should provide enough context by itself
-to be useful in a filtered log
-while not being *too* verbose at the same time.
+Допълнително,
+винаги е добра идея да използвате подобни префикси
+и структура на изреченията в съобщенията в логовете,
+което улеснява използването на инструмент като `grep` за филтрирането им.
+Самото съобщение трябва да предоставя достатъчно контекст
+за да е полезен във филтрирани логовете,
+но и в същото време не е и _твърде_ информативен.
 
 [log-levels]: https://docs.rs/log/0.4.4/log/enum.Level.html
 
-### Example log statements
+### Примерни логове
 
 ```console
 error: could not find `Cargo.toml` in `/home/you/project/`
@@ -82,7 +82,7 @@ error: could not find `Cargo.toml` in `/home/you/project/`
 => Downloading packages...
 ```
 
-The following log output is taken from [wasm-pack]:
+Следният лог изход е взет от [wasm-pack]:
 
 ```console
  [1/7] Adding WASM target...
@@ -100,41 +100,41 @@ The following log output is taken from [wasm-pack]:
  Done in 1 second
 ```
 
-## When panicking
+## При паникьосване
 
-One aspect often forgotten is that
-your program also outputs something when it crashes.
-In Rust, "crashes" are most often "panics"
-(i.e., "controlled crashing"
-in contrast to "the operating system killed the process").
-By default,
-when a panic occurs,
-a "panic handler" will print some information to the console.
+Един от аспектите, който често се забравя, е това, че
+вашата програма също извежда нещо, когато се срине.
+В Rust, "сривовете" най-често са "паника"
+(т.е. „контролиран срив“
+за разлика от това „операционната система да убе процеса“).
+По подразбиране,
+когато настъпи паника,
+"паник манипулатор" ще отпечата някаква информация на конзолата
 
-For example,
-if you create a new binary project
-with `cargo new --bin foo`
-and replace the content of `fn main` with `panic!("Hello World")`,
-you get this when you run your program:
+Например,
+ако създадете нов бинарен проект
+с командата `cargo new --bin foo`
+и заменете съдържанието на `fn main` с `panic!("Hello World")`,
+получавате това, когато стартирате вашата програма:
 
 ```console
 thread 'main' panicked at 'Hello, world!', src/main.rs:2:5
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
-This is useful information to you, the developer.
-(Surprise: the program crashed because of line 2 in your `main.rs` file).
-But for a user who doesn't even have access to the source code,
-this is not very valuable.
-In fact, it most likely is just confusing.
-That's why it's a good idea to add a custom panic handler,
-that provides a bit more end-user focused output.
+Това е полезна информация за вас, разработчика.
+(Изненада: програмата се срина поради ред 2 във вашия файл `main.rs`).
+Но за потребител, който дори няма достъп до изходния код,
+това не е много ценно.
+Всъщност най-вероятно е просто объркващо.
+Ето защо е добра идея да добавите персонализиран манипулатор на паника,
+което осигурява малко по-фокусиран към крайния потребител резултат.
 
-One library that does just that is called [human-panic].
-To add it to your CLI project,
-you import it
-and call the `setup_panic!()` macro
-at the beginning of your `main` function:
+Една библиотека, която прави точно това и се нарича [human-panic].
+За да го добавите към конзолния ви проект,
+импортирайте го
+и извикайте макрото `setup_panic!()`
+в началото на вашата `main` функция:
 
 ```rust,ignore
 use human_panic::setup_panic;
@@ -146,8 +146,8 @@ fn main() {
 }
 ```
 
-This will now show a very friendly message,
-and tells the user what they can do:
+Това вече ще покаже много приятелско съобщение,
+и казва на потребителя какво може да направи:
 
 ```console
 Well, this is embarrassing.
