@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Общуване с машини - Command Line Applications in Rust</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../src/special-content.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Предговор</a></li><li class="chapter-item expanded "><a href="../tutorial/index.html"><strong aria-hidden="true">1.</strong> Приложение за команден ред в рамките на 15 минути</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup.html"><strong aria-hidden="true">1.1.</strong> Настройване на проекта</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args.html"><strong aria-hidden="true">1.2.</strong> Анализиране на аргументите подадени на командния ред</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft.html"><strong aria-hidden="true">1.3.</strong> Първа имплементация</a></li><li class="chapter-item expanded "><a href="../tutorial/errors.html"><strong aria-hidden="true">1.4.</strong> По-добро отчитане на грешки</a></li><li class="chapter-item expanded "><a href="../tutorial/output.html"><strong aria-hidden="true">1.5.</strong> Изход за хора и машини</a></li><li class="chapter-item expanded "><a href="../tutorial/testing.html"><strong aria-hidden="true">1.6.</strong> Тестване</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging.html"><strong aria-hidden="true">1.7.</strong> Опаковане и разпространение на Rust инструмент</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/index.html"><strong aria-hidden="true">2.</strong> Задълбочени теми</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals.html"><strong aria-hidden="true">2.1.</strong> Обработка на сигнали</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files.html"><strong aria-hidden="true">2.2.</strong> Използване на конфигурационни файлове</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code.html"><strong aria-hidden="true">2.3.</strong> Кодове за изход</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication.html"><strong aria-hidden="true">2.4.</strong> Общуване с хора</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication.html" class="active"><strong aria-hidden="true">2.5.</strong> Общуване с машини</a></li><li class="chapter-item expanded "><a href="../in-depth/docs.html"><strong aria-hidden="true">2.6.</strong> Рендиране на документация за вашето CLI приложение</a></li></ol></li><li class="chapter-item expanded "><a href="../resources/index.html"><strong aria-hidden="true">3.</strong> Ресурси</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Command Line Applications in Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-cli/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Общуване-с-машини"><a class="header" href="#Общуване-с-машини">Общуване с машини</a></h1>
+<p>Силата на инструментите на командния ред наистина излиза наяве
+когато можете да ги комбинирате.
+Това не е нова идея:
+Всъщност това е изречение от [философията на Unix]:</p>
+<blockquote>
+<p>Очаквайте изхода на всяка програма да стане вход за друга, все още неизвестна програма.</p>
+</blockquote>
+<p>[философията на Unix]: <a href="https://en.wikipediaUnix">https://en.wikipediaUnix</a> philosophy.org/wiki/Unix_philosophy</p>
+<p>Ако нашите програми изпълнят това очакване,
+нашите потребители ще бъдат доволни.
+За да сте сигурни, че това работи добре,
+ние трябва да осигурим не просто красив резултат за хората,
+но също и версия, съобразена с това, от което се нуждаят други програми.
+Нека да видим как можем да направим това.</p>
+<aside>
+<p><strong>Забележка:</strong>
+Не забравяйте да прочетете <a href="../tutorial/output.html">главата за изход за хора и машини</a>
+пo първото ръководство.
+Той обхваща как да записвате изход към терминала.</p>
+</aside>
+<h2 id="Кой-чете-това"><a class="header" href="#Кой-чете-това">Кой чете това?</a></h2>
+<p>Първият въпрос, който трябва да зададете е:
+Дали нашата продукция за човек пред цветен терминал,
+или за друга програма?
+За да отговорите на това,
+можете да използвате библиоте като <a href="https://crates.io/crates/is-terminal">is-terminal</a>:</p>
+<pre><code class="language-rust ignore">use is_terminal::IsTerminal as _;
+
+if std::io::stdout().is_terminal() {
+    println!(&quot;I'm a terminal&quot;);
+} else {
+    println!(&quot;I'm not&quot;);
+}
+</code></pre>
+<p>В зависимост от това кой ще прочете нашия резултат,
+можем да добавим допълнителна информация.
+Хората са склонни да харесват цветовете,
+например,
+ако стартирате <code>ls</code> в случаен Rust проект,
+може да видите нещо подобно:</p>
+<pre><code class="language-console">$ ls
+CODE_OF_CONDUCT.md   LICENSE-APACHE       examples
+CONTRIBUTING.md      LICENSE-MIT          proptest-regressions
+Cargo.lock           README.md            src
+Cargo.toml           convey_derive        target
+</code></pre>
+<p>Тъй като този стил е създаден за хората,
+в повечето конфигурации
+дори ще отпечата някои от имената (като <code>src</code>) в цвят
+за да покажат, че са директории.
+Ако вместо това насочите това към файл,
+или програма като <code>cat</code>,
+<code>ls</code> ще адаптира своя изход.
+Вместо да използвам колони, които отговарят на моя терминален прозорец
+той ще отпечата всеки запис на отделен ред.
+Освен това няма да излъчва никакви цветове.</p>
+<pre><code class="language-console">$ ls | cat
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+Cargo.lock
+Cargo.toml
+LICENSE-APACHE
+LICENSE-MIT
+README.md
+convey_derive
+examples
+proptest-regressions
+src
+target
+</code></pre>
+<h2 id="Лесни-изходни-формати-за-машини"><a class="header" href="#Лесни-изходни-формати-за-машини">Лесни изходни формати за машини</a></h2>
+<p>Исторически,
+единственият тип изходен код от конзолните приложения бяха низове.
+Това обикновено е добре за хората пред терминала,
+които могат да четат текста
+и разсъждават за значението му.
+Други програми обаче обикновено нямат тази възможност:
+Единственият начин те да разберат резултата от даден инструмент
+като <code>ls</code>
+е ако авторът на програмата е включил анализатор
+за да работи с каквито и да е изходи на <code>ls</code>.</p>
+<p>Това често означава, че
+този изход бе ограничен до това, което е лесно за анализиране.
+Формати като TSV (стойности, разделени с табулации),
+където всеки запис е на отделен ред,
+и всеки ред съдържа съдържание, разделено с табулации,
+са много популярни.
+Тези прости формати, базирани на редове текст
+позволяват на инструменти като <code>grep</code>
+да използват изхода на инструменти като <code>ls</code>.
+Командата <code>| grep Cargo</code> не се интересува дали редовете ви са от <code>ls</code> или файл,
+то просто ще филтрира ред по ред.</p>
+<p>Недостатъкът на това е, че не можете да използвате
+<code>grep</code> като лесно да го извикате за филтриране на всички директории, които <code>ls</code> ви подава.
+За целта всеки елемент от директорията ще трябва да носи допълнителни данни.</p>
+<h2 id="json-изход-за-машини"><a class="header" href="#json-изход-за-машини">JSON изход за машини</a></h2>
+<p>Стойностите, разделени с разделители, са лесен начин
+за извеждане на структурирани данни,
+но изисква другата програма да знае кои полета да очаква
+(и в какъв ред)
+и е трудно да се извеждат съобщения от различни типове.
+Например,
+да кажем, че нашата програма иска да изпрати съобщение до потребителя
+че в момента чака изтеглянето,
+и след това ще изведе съобщение, описващо получените данни.
+Това са много различни видове съобщения
+и опита да ги обединим в TSV изход
+ще изисква от нас да измислим начин да ги разграничим.
+Същото, когато искаме да отпечатаме съобщение, което съдържа два списъка
+от предмети с различна дължина.</p>
+<p>Все още,
+добра идея е да изберете формат, който лесно се анализира
+в повечето програмни езици/среди.
+По този начин,
+през последните години много приложения придобиха възможността
+за извеждане на техните данни в <a href="https://www.json.org/">JSON</a>.
+То е достатъчно прост формат, че практически всеки език има анализатори за него
+но и достатъчно мощен, за да бъде полезен в много случаи.
+Въпреки че е текстов формат, който може да се чете от хора,
+много хора са работили върху имплементации, които са много бързи
+при анализиране на JSON данни и сериализиране на данни в JSON.</p>
+<p>В описанието по-горе,
+говорихме за “съобщения”, написани от нашата програма.
+Това е добър начин да мислите за изхода:
+Вашата програма не извежда непременно само един блок от данни
+но всъщност може да излъчва много различна информация
+докато работи.
+Един лесен начин за поддържане на този подход при извеждане на JSON
+е да напишете един JSON документ на съобщение
+и да поставяте всеки JSON документ на нов ред
+(понякога наричан <a href="https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON">JSON с разделени редове</a>).
+Това може да направи имплементациите толкова прости, колкото използването на обикновен <code>println!</code>.</p>
+<p>Ето един прост пример,
+използвайки макро <code>json!</code> от библиотеката <a href="https://crates.io/crates/serde_json">serde_json</a>
+за бързо записване на валиден JSON във вашия изходен код на Rust:</p>
+<pre><code class="language-rust ignore">use clap::Parser;
+use serde_json::json;
+
+/// Search for a pattern in a file and display the lines that contain it.
+#[derive(Parser)]
+struct Cli {
+    /// Output JSON instead of human readable messages
+    #[arg(long = &quot;json&quot;)]
+    json: bool,
+}
+
+fn main() {
+    let args = Cli::parse();
+    if args.json {
+        println!(
+            &quot;{}&quot;,
+            json!({
+                &quot;type&quot;: &quot;message&quot;,
+                &quot;content&quot;: &quot;Hello world&quot;,
+            })
+        );
+    } else {
+        println!(&quot;Hello world&quot;);
+    }
+}
+</code></pre>
+<p>Ето и изхода:</p>
+<pre><code class="language-console">$ cargo run -q
+Hello world
+$ cargo run -q -- --json
+{&quot;content&quot;:&quot;Hello world&quot;,&quot;type&quot;:&quot;message&quot;}
+</code></pre>
+<p>(Стартирането на <code>cargo</code> с <code>-q</code> потиска обичайния му изход.
+Аргументите след „–“ се предават на нашата програма.)</p>
+<h3 id="Практически-пример-ripgrep"><a class="header" href="#Практически-пример-ripgrep">Практически пример: ripgrep</a></h3>
+<p><em><a href="https://github.com/BurntSushi/ripgrep">ripgrep</a></em> е заместител на <em>grep</em> или <em>ag</em>, написан на Rust.
+По подразбиране ще генерира изход по следния начин:</p>
+<pre><code class="language-console">$ rg default
+src/lib.rs
+37:    Output::default()
+
+src/components/span.rs
+6:    Span::default()
+</code></pre>
+<p>Но ако подадем <code>--json</code> то ще принтира:</p>
+<pre><code class="language-console">$ rg default --json
+{&quot;type&quot;:&quot;begin&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;}}}
+{&quot;type&quot;:&quot;match&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;},&quot;lines&quot;:{&quot;text&quot;:&quot;    Output::default()\n&quot;},&quot;line_number&quot;:37,&quot;absolute_offset&quot;:761,&quot;submatches&quot;:[{&quot;match&quot;:{&quot;text&quot;:&quot;default&quot;},&quot;start&quot;:12,&quot;end&quot;:19}]}}
+{&quot;type&quot;:&quot;end&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/lib.rs&quot;},&quot;binary_offset&quot;:null,&quot;stats&quot;:{&quot;elapsed&quot;:{&quot;secs&quot;:0,&quot;nanos&quot;:137622,&quot;human&quot;:&quot;0.000138s&quot;},&quot;searches&quot;:1,&quot;searches_with_match&quot;:1,&quot;bytes_searched&quot;:6064,&quot;bytes_printed&quot;:256,&quot;matched_lines&quot;:1,&quot;matches&quot;:1}}}
+{&quot;type&quot;:&quot;begin&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;}}}
+{&quot;type&quot;:&quot;match&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;},&quot;lines&quot;:{&quot;text&quot;:&quot;    Span::default()\n&quot;},&quot;line_number&quot;:6,&quot;absolute_offset&quot;:117,&quot;submatches&quot;:[{&quot;match&quot;:{&quot;text&quot;:&quot;default&quot;},&quot;start&quot;:10,&quot;end&quot;:17}]}}
+{&quot;type&quot;:&quot;end&quot;,&quot;data&quot;:{&quot;path&quot;:{&quot;text&quot;:&quot;src/components/span.rs&quot;},&quot;binary_offset&quot;:null,&quot;stats&quot;:{&quot;elapsed&quot;:{&quot;secs&quot;:0,&quot;nanos&quot;:22025,&quot;human&quot;:&quot;0.000022s&quot;},&quot;searches&quot;:1,&quot;searches_with_match&quot;:1,&quot;bytes_searched&quot;:5221,&quot;bytes_printed&quot;:277,&quot;matched_lines&quot;:1,&quot;matches&quot;:1}}}
+{&quot;data&quot;:{&quot;elapsed_total&quot;:{&quot;human&quot;:&quot;0.006995s&quot;,&quot;nanos&quot;:6994920,&quot;secs&quot;:0},&quot;stats&quot;:{&quot;bytes_printed&quot;:533,&quot;bytes_searched&quot;:11285,&quot;elapsed&quot;:{&quot;human&quot;:&quot;0.000160s&quot;,&quot;nanos&quot;:159647,&quot;secs&quot;:0},&quot;matched_lines&quot;:2,&quot;matches&quot;:2,&quot;searches&quot;:2,&quot;searches_with_match&quot;:2}},&quot;type&quot;:&quot;summary&quot;}
+</code></pre>
+<p>Както виждате,
+всеки JSON документ е обект (шаблон) съдържащо поле <code>type</code>.
+Това ще ни позволи да напишем прост интерфейс за <code>rg</code>
+който чете тези документи, когато влязат и показват съвпаденията
+(както и файловете, в които се намират)
+дори докато <em>ripgrep</em> все още търси.</p>
+<aside>
+<p><strong>Забелжка:</strong>
+Ето как Visual Studio Code използва <em>ripgrep</em> за своето търсене в кода.</p>
+</aside>
+<h2 id="Как-да-се-справим-с-подадената-информация"><a class="header" href="#Как-да-се-справим-с-подадената-информация">Как да се справим с подадената информация</a></h2>
+<p>Да приемем, че имаме програма, която чете броя на думите във файл:</p>
+<pre><code class="language-rust ignore">use clap::Parser;
+use std::path::PathBuf;
+
+/// Count the number of lines in a file
+#[derive(Parser)]
+#[command(arg_required_else_help = true)]
+struct Cli {
+    /// The path to the file to read
+    file: PathBuf,
+}
+
+fn main() {
+    let args = Cli::parse();
+    let mut word_count = 0;
+    let file = args.file;
+
+    for line in std::fs::read_to_string(&amp;file).unwrap().lines() {
+        word_count += line.split(' ').count();
+    }
+
+    println!(&quot;Words in {}: {}&quot;, file.to_str().unwrap(), word_count)
+}
+</code></pre>
+<p>Той взема пътя до файл, чете го ред по ред и брои броя
+думи, разделени с интервал.</p>
+<p>Когато го стартирате, той извежда общия брой думи във файла:</p>
+<pre><code class="language-console">$ cargo run README.md
+Words in README.md: 47
+</code></pre>
+<p>Но какво ще стане, ако искаме да преброим броя на думите, въведени в програмата?
+Програмите на Rust могат да четат данни, предадени чрез stdin <a href="https://doc.rust-lang.org/std/io/struct.Stdin.html">със структурата Stdin</a>, която можете да получите чрез <a href="https://doc.rust-lang.org/std/io/fn.stdin.html">функцията stdin</a>
+от стандартната библиотека. Подобно на четенето на редовете от файл, той може да чете
+и редовете от stdin.</p>
+<p>Ето една програма, която брои думите на това, което е въведено чрез stdin</p>
+<pre><code class="language-rust ignore">use clap::{CommandFactory, Parser};
+use is_terminal::IsTerminal as _;
+use std::{
+    fs::File,
+    io::{stdin, BufRead, BufReader},
+    path::PathBuf,
+};
+
+/// Count the number of lines in a file or stdin
+#[derive(Parser)]
+#[command(arg_required_else_help = true)]
+struct Cli {
+    /// The path to the file to read, use - to read from stdin (must not be a tty)
+    file: PathBuf,
+}
+
+fn main() {
+    let args = Cli::parse();
+
+    let word_count;
+    let mut file = args.file;
+
+    if file == PathBuf::from(&quot;-&quot;) {
+        if stdin().is_terminal() {
+            Cli::command().print_help().unwrap();
+            ::std::process::exit(2);
+        }
+
+        file = PathBuf::from(&quot;&lt;stdin&gt;&quot;);
+        word_count = words_in_buf_reader(BufReader::new(stdin().lock()));
+    } else {
+        word_count = words_in_buf_reader(BufReader::new(File::open(&amp;file).unwrap()));
+    }
+
+    println!(&quot;Words from {}: {}&quot;, file.to_string_lossy(), word_count)
+}
+
+fn words_in_buf_reader&lt;R: BufRead&gt;(buf_reader: R) -&gt; usize {
+    let mut count = 0;
+    for line in buf_reader.lines() {
+        count += line.unwrap().split(' ').count()
+    }
+    count
+}
+</code></pre>
+<p>Ако стартирате тази програма с текст, въведен по канал, с <code>-</code>, представляващ намерението
+за четене от <code>stdin</code>, тя ще изведе броя на думите:</p>
+<pre><code class="language-console">$ echo &quot;hi there friend&quot; | cargo run -- -
+Words from stdin: 3
+</code></pre>
+<p>Изисква се това че stdin не е интерактивно, защото очакваме вход, което
+предаден до програмата, а не текст, въведен по време на изпълнение. Ако stdin е
+a <code>tty</code>, извежда помощните документи, така че е ясно защо не работи.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../in-depth/human-communication.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../in-depth/docs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../in-depth/human-communication.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../in-depth/docs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Тестване - Command Line Applications in Rust</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../src/special-content.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../index.html">Предговор</a></li><li class="chapter-item expanded "><a href="../tutorial/index.html"><strong aria-hidden="true">1.</strong> Приложение за команден ред в рамките на 15 минути</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tutorial/setup.html"><strong aria-hidden="true">1.1.</strong> Настройване на проекта</a></li><li class="chapter-item expanded "><a href="../tutorial/cli-args.html"><strong aria-hidden="true">1.2.</strong> Анализиране на аргументите подадени на командния ред</a></li><li class="chapter-item expanded "><a href="../tutorial/impl-draft.html"><strong aria-hidden="true">1.3.</strong> Първа имплементация</a></li><li class="chapter-item expanded "><a href="../tutorial/errors.html"><strong aria-hidden="true">1.4.</strong> По-добро отчитане на грешки</a></li><li class="chapter-item expanded "><a href="../tutorial/output.html"><strong aria-hidden="true">1.5.</strong> Изход за хора и машини</a></li><li class="chapter-item expanded "><a href="../tutorial/testing.html" class="active"><strong aria-hidden="true">1.6.</strong> Тестване</a></li><li class="chapter-item expanded "><a href="../tutorial/packaging.html"><strong aria-hidden="true">1.7.</strong> Опаковане и разпространение на Rust инструмент</a></li></ol></li><li class="chapter-item expanded "><a href="../in-depth/index.html"><strong aria-hidden="true">2.</strong> Задълбочени теми</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../in-depth/signals.html"><strong aria-hidden="true">2.1.</strong> Обработка на сигнали</a></li><li class="chapter-item expanded "><a href="../in-depth/config-files.html"><strong aria-hidden="true">2.2.</strong> Използване на конфигурационни файлове</a></li><li class="chapter-item expanded "><a href="../in-depth/exit-code.html"><strong aria-hidden="true">2.3.</strong> Кодове за изход</a></li><li class="chapter-item expanded "><a href="../in-depth/human-communication.html"><strong aria-hidden="true">2.4.</strong> Общуване с хора</a></li><li class="chapter-item expanded "><a href="../in-depth/machine-communication.html"><strong aria-hidden="true">2.5.</strong> Общуване с машини</a></li><li class="chapter-item expanded "><a href="../in-depth/docs.html"><strong aria-hidden="true">2.6.</strong> Рендиране на документация за вашето CLI приложение</a></li></ol></li><li class="chapter-item expanded "><a href="../resources/index.html"><strong aria-hidden="true">3.</strong> Ресурси</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Command Line Applications in Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-cli/book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="Тестване"><a class="header" href="#Тестване">Тестване</a></h1>
+<p>В продължение на десетилетия разработка на софтуер,
+хората са открили една истина:
+Нетестваният софтуер рядко работи.
+(Много хора биха стигнали дотам, че да кажат:
+„Повечето тестван софтуер също не работи.“
+Но тук всички сме оптимисти, нали?)
+Така че, за да сте сигурни, че вашата програма прави това, което очаквате да прави,
+разумно е да го тествате.</p>
+<p>Един лесен начин да направите това е
+да напишете <code>README</code> файл
+който описва какво трябва да прави вашата програма.
+И когато се почувствате готови да направите ново издание,
+преминете през <code>README</code> файла и гарантирайте това
+поведението все още е според очакванията.
+Можете да направите това по-строго упражнение
+като също така запишете как вашата програма трябва да реагира на грешни входове.</p>
+<p>Ето още една интересна идея:
+Напишете <code>README</code> файла преди да напишете кода.</p>
+<aside>
+<p><strong>Забележка:</strong>
+Погледнете на
+<a href="https://dev.bg/digest/test-driven-development/">Test-Driver Development</a> (TDD)
+ако не сте чували за него.</p>
+</aside>
+<h2 id="Автоматизирано-тестване"><a class="header" href="#Автоматизирано-тестване">Автоматизирано тестване</a></h2>
+<p>Сега, всичко това е чудесно,
+но да направите всичко това ръчно?
+Това може да отнеме много време.
+По същото време,
+много хора започнаха да изпитват удоволствие да казват на компютрите да правят неща вместо тях.
+Нека поговорим как да автоматизираме тези тестове.</p>
+<p>Rust има вградена тестов <code>framework</code>
+така че нека започнем с написването на първия ни тест:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn answer() -&gt; i32 {
+</span><span class="boring">  42
+</span><span class="boring">}
+</span><span class="boring">
+</span>#[test]
+fn check_answer_validity() {
+    assert_eq!(answer(), 42);
+}
+</code></pre>
+<p>Можете да поставите този кодов фрагмент в почти всеки файл
+и <code>cargo test</code> ще намери
+и ще го изпълни.
+Ключът тук е <code>#[test]</code> атрибутът.
+Това позволява на системата за изграждане да открие такива функции
+и да ги изпълни като тестове,
+проверявайки дали са коректни.</p>
+<aside class="exercise">
+<p><strong>Упражнение за читателя:</strong>
+Накарайте този тест да проработи.</p>
+<p>Трябва да получите резултат като следния:</p>
+<pre><code class="language-text">running 1 test
+test check_answer_validity ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+</code></pre>
+</aside>
+<p>Сега, след като видяхме <em>как</em> можем да пишем тестове,
+все още трябва да разберем <em>какво</em> да тестваме.
+Както видяхте, е доста лесно да се пишат твърдения
+за функции.
+Но едно CLI приложение често има повече от една функция!
+По-лошото е, че то често се занимава с входните данни от потребителя,
+четене от файлове
+и изваждане на резултат.</p>
+<h2 id="Направете-кода-си-годен-за-тестване"><a class="header" href="#Направете-кода-си-годен-за-тестване">Направете кода си годен за тестване</a></h2>
+<p>Има два допълващи се подхода за тестване на функционалността:
+Тестване малки единици, от които изграждате цялото си приложение,
+които се наричат “unit tests”.
+И също така и тестване на готовото приложение “от външната страна”
+наречено още “black box tests” или “integration tests” (интеграционни тестове).
+Нека да започнем с първия.</p>
+<p>За да разберем какво трябва да тестваме,
+нека да видим какви са функциите на нашата програма.
+Главно, <code>grrs</code> трябва да отпечата редовете, които отговарят на даден шаблон.
+И така, нека да напишем <code>unit</code> тестове <em>точно за това</em>:
+Искаме да сме сигурни, че нашата най-важна част от логиката работи
+и искаме да го направим по начин, който е независим
+от всеки код за настройка, който имаме около него
+(който се занимава с CLI аргументи, например).</p>
+<p>Връщайки се към нашата <a href="impl-draft.html">първа имплементация</a> на <code>grrs</code>,
+добавихме този блок код към функцията <code>main</code>:</p>
+<pre><code class="language-rust ignore">// ...
+for line in content.lines() {
+    if line.contains(&amp;args.pattern) {
+        println!(&quot;{}&quot;, line);
+    }
+}
+</code></pre>
+<p>За съжаление, това не е много лесно за тестване.
+Първо, това е в основната функция, така че не можем лесно да го извикаме.
+Това лесно се коригира чрез преместване на тази част от кода във функция:</p>
+<pre><pre class="playground"><code class="language-rust no_run">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn find_matches(content: &amp;str, pattern: &amp;str) {
+    for line in content.lines() {
+        if line.contains(pattern) {
+            println!(&quot;{}&quot;, line);
+        }
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Сега можем да извикаме тази функция в нашия тест,
+и да видим какъв е изходът му:</p>
+<pre><code class="language-rust ignore">#[test]
+fn find_a_match() {
+    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;);
+    assert_eq!( // uhhhh
+</code></pre>
+<p>Или… можем ли?
+В момента, <code>find_matches</code> отпечатва директно към <code>stdout</code>, т.е. в терминала.
+Не можем лесно да уловим това в тест!
+Това е проблем, който често се появява
+когато пишете тестове след имплементацията на логиката:
+Написахме функция, която е здраво интегрирана
+в контекста, в който се използва.</p>
+<aside class="note">
+<p><strong>Забележка:</strong>
+Това е напълно правилно, когато пишете малки CLI приложения.
+Няма нужда всичко да е тестваем!
+Важно е да се мисли за
+кои части от кода си обаче бихте искали да напишете <code>unit</code> тестове.
+Въпреки че ще видим, че е лесно да промените тази функция, за да бъде тествана,
+това не винаги ще е случая.</p>
+</aside>
+<p>Добре, как можем да направим това тестваем?
+Ще трябва някак да уловим резултата.
+Стандартната библеотека на Rust има някои чисти абстракции
+за работа с I/O (вход/изход)
+и ние ще използваме един наречен <a href="https://doc.rust-lang.org/1.39.0/std/io/trait.Write.html"><code>std::io::Write</code></a>.
+Това е <a href="https://doc.rust-lang.org/book/ch10-02-traits.html">trait</a> абстрахираща над нещата, за които можем да пишем,
+което включва низове, но също така <code>stdout</code>.</p>
+<p>Ако за първи път чувате думичката “trait”
+в контекста на Rust,
+трябва се обогатите.
+<code>Trait</code>-овете са са една от най-мощните характеристики на Rust.
+Можете да мислите за тях като за интерфейсите в Java,
+или типа ‘classes’ в езика Haskell
+(с каквото сте по-запознати).
+Те ви позволяват да се абстрахирате от поведението
+които могат да се споделят от различни типове.
+Кодът, който използва <code>trait</code>, могат да
+изразяват идеите си по много общи и гъвкави начини.
+Това обаче означава, че може да стане трудно за четене.
+Не позволявайте на това да ви плаши:
+Дори хора, които са използвали Rust от години
+не разбират веднага какво прави генеричния код.
+А в този случай,
+помага да се мисли за конкретни употреби.
+Например,
+в нашия случай,
+поведението, което абстрахираме, е “пиши му / записване”.
+Примери за типовете, които го имплементират (“impl”)
+са :
+Стандартния изход на терминала,
+файлове,
+буфера в паметта,
+или интернет връзка чрез протокола <code>TCP</code>.
+(Скролнете надолу в <a href="https://doc.rust-lang.org/1.39.0/std/io/trait.Write.html">документацията за <code>std::io::Write</code></a>
+за да видите списък с “Имплементаторите”.)</p>
+<p>С това знание,
+нека променим нашата функция, за да приеме трети параметър.
+Трябва да е от всякакъв тип, който изпълнява <code>Write</code>.
+По този начин,
+можем да предоставим прост низ
+в нашите тестове
+и да направим твърдения по него.
+Ето как можем да напишем тази версия на функцията <code>find_matches</code>:</p>
+<pre><code class="language-rust ignore">fn find_matches(content: &amp;str, pattern: &amp;str, mut writer: impl std::io::Write) {
+    for line in content.lines() {
+        if line.contains(pattern) {
+            writeln!(writer, &quot;{}&quot;, line);
+        }
+    }
+}
+</code></pre>
+<p>Новия параметър е <code>mut writer</code>,
+т.е., променливо, което наричаме “writer”.
+Типът му е <code>impl std::io::Write</code>,
+което можете да прочетете като
+“контейнер за всеки тип, който имплементира <code>Write trait</code>”.
+Също така обърнете внимание как
+заменихме <code>println!(…)</code>
+, което използвахме по-рано
+с <code>writeln!(writer, …)</code>.
+<code>println!</code> работи по същия начин като <code>writeln!</code>
+но винаги използва стандартния изход.</p>
+<p>Сега можем да тестваме изхода:</p>
+<pre><code class="language-rust ignore">#[test]
+fn find_a_match() {
+    let mut result = Vec::new();
+    find_matches(&quot;lorem ipsum\ndolor sit amet&quot;, &quot;lorem&quot;, &amp;mut result);
+    assert_eq!(result, b&quot;lorem ipsum\n&quot;);
+}
+</code></pre>
+<p>За да използваме това в кода на нашето приложение,
+трябва да променим извикването на <code>find_matches</code> в функцията <code>main</code>
+като добавим <a href="https://doc.rust-lang.org/1.39.0/std/io/fn.stdout.html"><code>&amp;mut std::io::stdout()</code></a> като трети параметър.
+Ето и пример с основната функция
+който се основава на това, което видяхме в предишните глави
+и използва нашата извлечена функция <code>find_matches</code>:</p>
+<pre><code class="language-rust ignore">fn main() -&gt; Result&lt;()&gt; {
+    let args = Cli::parse();
+    let content = std::fs::read_to_string(&amp;args.path)
+        .with_context(|| format!(&quot;could not read file `{}`&quot;, args.path.display()))?;
+
+    find_matches(&amp;content, &amp;args.pattern, &amp;mut std::io::stdout());
+
+    Ok(())
+}
+</code></pre>
+<aside class="note">
+<p><strong>Забележка:</strong>
+Тъй като <code>stdout</code> очаква байтове,
+използваме <code>std::io::Write</code> вместо <code>std::fmt::Write</code>.
+Като резултат,
+даваме празен вектор(лист) за “записване на резултатите” в нашия тест
+(неговият тип ще бъде <code>Vec&lt;u8&gt;</code>),
+в <code>assert_eq!</code> използваме <code>b&quot;foo&quot;</code>.
+(Префикса <code>b</code> го превръща в <em>байтов низов литерал</em>
+така че неговият тип ще бъде <code>&amp;[u8]</code> вместо <code>&amp;str</code>).</p>
+</aside>
+<aside class="note">
+<p><strong>Забележка:</strong>
+Можем също да накараме тази функция да връща <code>String</code>,
+но това би променило поведението му.
+Вместо да изпринтира директно на терминала,
+това ще събере всичко в низ,
+и ще извади целия резултат наведнъж в края.</p>
+</aside>
+<aside class="exercise">
+<p><strong>Упражнение за читателя:</strong>
+<a href="https://doc.rust-lang.org/1.39.0/std/macro.writeln.html"><code>writeln!</code></a> връща <a href="https://doc.rust-lang.org/1.39.0/std/io/type.Result.html"><code>io::Result</code></a>
+защото писането може да се провали,
+например когато буферът е пълен и не може да бъде разширен.
+Добавяне на обработка на грешки към функцията <code>find_matches</code>.</p>
+</aside>
+<p>Току-що видяхме как да направим тази част от кода лесна за тестване.
+Имаме</p>
+<ol>
+<li>идентифицирахме една от основните части на нашето приложение,</li>
+<li>поставихме го в неговата собствена функция,</li>
+<li>и го направихме по-гъвкав.</li>
+</ol>
+<p>Въпреки че целта беше да го направим тестван,
+резултатът, до който стигнахме
+всъщност е много идиоматично и многократно използвано парче от Rust кода.
+Това е страхотно!</p>
+<h2 id="Разделяне-на-вашия-код-на-библиотечни-и-изпълняеми-цели"><a class="header" href="#Разделяне-на-вашия-код-на-библиотечни-и-изпълняеми-цели">Разделяне на вашия код на библиотечни и изпълняеми цели</a></h2>
+<p>Тук можем да направим още нещо.
+Досега сме поставили всичко, което сме написали в файла <code>src/main.rs</code>.
+Това означава, че текущият ни проект произвежда един изпълняем файл.
+Но можем също да направим нашия код достъпен като библиотека, като:</p>
+<ol>
+<li>Поставяме функцията <code>find_matches</code> в нов <code>src/lib.rs</code> файл.</li>
+<li>Добавяме<code>pub</code> в началото на <code>fn</code> (така че да изглежда така <code>pub fn find_matches</code>)
+за да стане нещо, до което потребителите на нашата библиотека да имат достъп.</li>
+<li>Премахваме <code>find_matches</code> от файла <code>src/main.rs</code>.</li>
+<li>И в <code>fn main</code> функцията, добавяме повикването към <code>find_matches</code> с <code>grrs::</code>,
+така че сега да изглежда по този начин: <code>grrs::find_matches(…)</code>.
+това означава, че използваме функцията от библиотеката, която току-що написахме!</li>
+</ol>
+<p>Начинът, по който Rust се справя с проекти, е доста гъвкав
+и е добра идея да помислите
+какво да поставите като библеотеката в проекта си още от началото.
+Можете, например, да помислите за писане на библиотека
+първо за специфична за вашето приложението логика
+и след това да го използвате във вашия CLI приложение точно като всяка друга библиотека.
+Или, ако вашият проект има множество изпълняеми файлове,
+можете да поставите общата функционалност в отделна с библиотечка за проекта.</p>
+<aside class="note">
+<p><strong>Забележка:</strong>
+Говорейки за поставяне на всичко в файла <code>src/main.rs</code>:
+Ако продължим да правим това,
+ще стане трудно за четене.
+<a href="https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html">Модулната система</a> може да ви помогне да структурирате и организирате кода си.</p>
+</aside>
+<h2 id="Тестване-на-cli-приложения-чрез-стартирането-им"><a class="header" href="#Тестване-на-cli-приложения-чрез-стартирането-им">Тестване на CLI приложения чрез стартирането им</a></h2>
+<p>Дотук малко се отклонихме от темата
+, за да тестваме <em>бизнес логиката</em> на нашата програма,
+което се оказа функцията <code>find_matches</code>.
+Това е много ценна
+и страхотна първа стъпка
+към добре тествана кодова база.
+(Обикновено тези видове тестове се наричат “unit” тестове.)</p>
+<p>Обаче има много код, който не тестваме:
+Всичко, което напишем, за да се справим с външния свят!
+Представете си, че сте написали основната функция,
+но случайно оставяте твърдо кодиран низ (статичен низ)
+вместо да използвате аргумента на предоставения от потребителя път.
+Трябва да пишем тестове и за това!
+(Това ниво на тестване често се нарича
+“интеграционно тестване”, или “тестване на система”.)</p>
+<p>В основата си,
+все още пишем функции
+и ги анотираме с <code>#[test]</code>.
+Въпросът е само какво правим вътре в тези функции.
+Например, ще искаме да използваме основния изпълняем файл на нашия проект
+и да го стартираме като обикновена програма.
+Също така ще поставим тези тестове в нов файл в нова директория:
+<code>tests/cli.rs</code>.</p>
+<aside>
+<p><strong>Забележка:</strong>
+По конвенция,
+<code>cargo</code> ще търси интеграционни тестове в <code>tests/</code> директорията.
+По същия начин,
+ще за бенчмарковете в <code>benches/</code>,
+и за примерите в <code>examples/</code>.
+Тези конвенции се разпростират и върху вашия основен изходен код:
+библеотеките имат <code>src/lib.rs</code> файл,
+главния изпълням файл е <code>src/main.rs</code>,
+или, ако има множество такива файлове,
+cargo очаква те да бъдат така <code>src/bin/&lt;name&gt;.rs</code>.
+Следването на тези конвенции ще направи кодовата ви база по-откриваема
+от хора, свикнали да четат код на Rust.</p>
+</aside>
+<p>Да си припомним,
+<code>grrs</code> е малък инструмент, който търси низ във файл.
+Преди това тествахме дали можем да намерим съвпадение.
+Нека помислим каква друга функционалност можем да тестваме.</p>
+<p>Ето какво измислих.</p>
+<ul>
+<li>Какво се случва, когато файлът не съществува?</li>
+<li>Какъв е резултатът, когато няма съвпадение?</li>
+<li>Програмата ни излиза ли с грешка, когато забравим един (или и двата) аргумента?</li>
+</ul>
+<p>Това са всички валидни тестови случаи.
+Освен това,
+трябва да включим и един тестов случай
+за “щастливия път”,
+т.е. намерихме поне едно съвпадение
+и го отпечатваме.</p>
+<p>За да улесните тези видове тестове,
+ще използваме библеотеката <a href="https://docs.rs/assert_cmd"><code>assert_cmd</code></a>.
+Има куп спретнати помощници
+, които ни позволяват да изпълняваме основния си изпълняем файл
+, за да видим как се държи.
+По-нататък,
+също ще добавим и библеотеката <a href="https://docs.rs/predicates"><code>predicates</code></a>
+което ни помага да пишем твърдения
+, срещу което <code>assert_cmd</code> може да тества
+(и които имат страхотни съобщения за грешки).
+Ще добавим тези зависимости не към основния списък,
+но към “dev dependencies” секцията в нашия <code>Cargo.toml</code>.
+Те са необходими само при разработване на приложението ви,
+, а не когато го използвате.</p>
+<pre><code class="language-toml">[dev-dependencies]
+assert_cmd = &quot;2.0.11&quot;
+predicates = &quot;3.0.3&quot;
+</code></pre>
+<p>Това звучи като много за настройване.
+Въпреки това –
+нека директно да се потопим
+и да създадем нашия <code>tests/cli.rs</code> файл:</p>
+<pre><code class="language-rust ignore">use assert_cmd::prelude::*; // Add methods on commands
+use predicates::prelude::*; // Used for writing assertions
+use std::process::Command; // Run programs
+
+#[test]
+fn file_doesnt_exist() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
+
+    cmd.arg(&quot;foobar&quot;).arg(&quot;test/file/doesnt/exist&quot;);
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains(&quot;could not read file&quot;));
+
+    Ok(())
+}
+</code></pre>
+<p>Можете да изпълните този тест с
+<code>cargo test</code>,
+точно като тестовете, които написахме по-горе.
+Може да отнеме малко повече време първия път,
+тъй като <code>Command::cargo_bin(&quot;grrs&quot;)</code> компилира главния ви изпълняем файл.</p>
+<h2 id="Генериране-на-тестови-файлове"><a class="header" href="#Генериране-на-тестови-файлове">Генериране на тестови файлове</a></h2>
+<p>Тестът, който току-що видяхме, проверява само дали нашата програма връща съобщение за грешка
+когато входният файл не съществува.
+Това е важен тест,
+но може би не най-важния:
+Нека сега да тестваме дали наистина ще отпечатаме съвпаденията, които намерихме във файл!</p>
+<p>Ще трябва да имаме файл, чието съдържание знаем,
+за да можем да знаем какво <em>трябва</em> да върне нашата програма
+и да проверим дали е очакваното в нашия код.
+Една идея може да е да добавите файл към проекта с персонализирано съдържание
+и да го използвате в тестове си.
+Друг начин би било да създадем временни файлове в нашите тестове.
+За този урок,
+ще разгледаме последния подход.
+Основно, защото е по-гъвкав и ще работи и в други случаи;
+например, когато тествате програми, които променят файловете.</p>
+<p>За да създадете тези временни файлове,
+ще трябва да използвате библеотеката <a href="https://docs.rs/assert_fs"><code>assert_fs</code></a>.
+Нека го добавим към <code>dev-dependencies</code> в нашия <code>Cargo.toml</code> файл:</p>
+<pre><code class="language-toml">assert_fs = &quot;1.0.13&quot;
+</code></pre>
+<p>Ето нов тестов случай
+(което можете да напишете под другото)
+, в който първо създавате временен файл
+(“наименуван”, за да можем да получим пътя му),
+изпълвайте го с някакъв текст,
+и след това изпълнете вашата програма
+, за да видите дали получаваме правилния резултат.
+Когато <code>file</code> излиза извън блока
+(в края на функцията),
+действителният временен файл автоматично ще бъде изтрит.</p>
+<pre><code class="language-rust ignore">use assert_fs::prelude::*;
+
+#[test]
+fn find_content_in_file() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let file = assert_fs::NamedTempFile::new(&quot;sample.txt&quot;)?;
+    file.write_str(&quot;A test\nActual content\nMore content\nAnother test&quot;)?;
+
+    let mut cmd = Command::cargo_bin(&quot;grrs&quot;)?;
+    cmd.arg(&quot;test&quot;).arg(file.path());
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains(&quot;test\nAnother test&quot;));
+
+    Ok(())
+}
+</code></pre>
+<aside class="exercise">
+<p><strong>Упражнение за читателя:</strong>
+Добавете интеграционни тестове за предаване на празен низ като шаблон.
+Коригирайте програмата според нуждите.</p>
+</aside>
+<h2 id="Какво-да-тествате"><a class="header" href="#Какво-да-тествате">Какво да тествате?</a></h2>
+<p>Въпреки че, със сигурност, може да бъде забавно да се пишат интеграционни тестове,
+ще ви отнеме известно време да ги напишете,
+както и да ги актуализирате, когато поведението на вашето приложение се промени.
+За да сте сигурни, че използвате времето си разумно,
+трябва да се запитате какво трябва да тествате.</p>
+<p>Като цяло е добра идея да се пишат интеграционни тестове
+за всички видове поведения, които потребителят може да наблюдава.
+Това означава, че не е необходимо да покривате всички крайни случаи:
+Обикновено е достатъчно да има примери за различните типове
+и да разчитайте на <code>unit</code> тестове, за да покриете крайните случаи.</p>
+<p>Също така е добра идея да не фокусирате тестовете си върху неща, които не можете да контролирате активно.
+Би било лоша идея да тествате точното оформление на <code>--help</code>
+тъй като се генерира за вас.
+Вместо това може просто да искате да проверите дали определени елементи присъстват.</p>
+<p>В зависимост от естеството на вашата програма,
+можете също да опитате да добавите още техники за тестване.
+Например,
+ако сте извлекли части от вашата програма
+и установете, че пишете много примерни случаи като <code>unit</code> тестове
+докато се опитвате да измислите всички крайни случаи,
+трябва да разгледате <a href="https://docs.rs/proptest"><code>proptest</code></a>.
+Ако имате програма, която използва произволни файлове и ги анализира,
+опитайте се да напишете с техниката <a href="https://rust-fuzz.github.io/book/introduction.html">fuzzer</a>, за да намирате бъгове в крайните случаи.</p>
+<aside>
+<p><strong>Забележка:</strong>
+Можете да намерите пълния изпълним изходен код, използван в тази глава
+<a href="https://github.com/rust-cli/book/tree/master/src/tutorial/testing">в хранилището на тази книга</a>.</p>
+</aside>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../tutorial/output.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../tutorial/packaging.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../tutorial/output.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../tutorial/packaging.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
